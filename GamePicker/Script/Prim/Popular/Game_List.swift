@@ -4,7 +4,7 @@ class Game_List: UIViewController,UITableViewDelegate,UITableViewDataSource {
     @IBOutlet var game_table: UITableView!
     
     var game_array = ["배틀그라운드","롤"]
-    var flag = 0
+    var flag : Int = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
