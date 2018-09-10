@@ -32,20 +32,16 @@ class Popular: UIViewController {
         self.view.addGestureRecognizer(swipeLeft)
     }
     
-    @IBAction func first(_ sender: Any) {
-        flag = 1
+    @IBAction func first(_ sender: Any) { flag = 1
         self.performSegue(withIdentifier: "game_list", sender: self)
     }
-    @IBAction func second(_ sender: Any) {
-        flag = 2
+    @IBAction func second(_ sender: Any) { flag = 2
         self.performSegue(withIdentifier: "game_list", sender: self)
     }
-    @IBAction func third(_ sender: Any) {
-        flag = 3
+    @IBAction func third(_ sender: Any) { flag = 3
         self.performSegue(withIdentifier: "game_list", sender: self)
     }
-    @IBAction func fourth(_ sender: Any) {
-        flag = 4
+    @IBAction func fourth(_ sender: Any) { flag = 4
         self.performSegue(withIdentifier: "game_list", sender: self)
     }
     
