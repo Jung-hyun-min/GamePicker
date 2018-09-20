@@ -4,16 +4,18 @@ import FBSDKCoreKit
 
 class Setting: UIViewController {
     
-    @IBOutlet var Profile_image: UIImageView!
-    @IBOutlet var Back_image: UIImageView!
-    @IBOutlet var User_email: UILabel!
-    @IBOutlet var User_name: UILabel!
+    @IBOutlet var Profile_image: UIImageView! // 프로필 사진
+    @IBOutlet var Back_image: UIImageView!    // 배경사진
+    @IBOutlet var User_name: UILabel!         // 이름
+    @IBOutlet var User_intro: UILabel! // 소개
+    
+    var User_ID: String = ""
+    
     let User_data = UserDefaults.standard
     
     @objc  func swiped(_ gesture: UISwipeGestureRecognizer) {
         if gesture.direction == .left {
-            if (self.tabBarController?.selectedIndex)! < 3
-            { // set here  your total tabs
+            if (self.tabBarController?.selectedIndex)! < 3 {
                 self.tabBarController?.selectedIndex += 1
             }
         } else if gesture.direction == .right {
@@ -25,47 +27,57 @@ class Setting: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        let swipeRight = UISwipeGestureRecognizer(target: self, action:  #selector(swiped))
-        swipeRight.direction = UISwipeGestureRecognizerDirection.right
-        self.view.addGestureRecognizer(swipeRight)
-        let swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(swiped))
-        swipeLeft.direction = UISwipeGestureRecognizerDirection.left
-        self.view.addGestureRecognizer(swipeLeft)
-        
-        //User_name.text = Auth.auth().currentUser?.displayName
         Profile_chk()
+        // 스와이프 제스쳐 추가
+        let swipeRight = UISwipeGestureRecognizer(target: self, action:  #selector(swiped))
+        let swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(swiped))
+        swipeRight.direction = UISwipeGestureRecognizerDirection.right
+        swipeLeft.direction = UISwipeGestureRecognizerDirection.left
+        self.view.addGestureRecognizer(swipeRight)
+        self.view.addGestureRecognizer(swipeLeft)
         
         Profile_image.layer.masksToBounds = true
         Profile_image.layer.cornerRadius = Profile_image.frame.size.height/2;
-        Profile_image.layer.borderWidth = 0.2
+        Profile_image.layer.borderWidth = 0.5
         Profile_image.layer.borderColor = UIColor.white.cgColor
         Profile_image.clipsToBounds = true;
+        Back_image.layer.cornerRadius = 10
+        Back_image.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
         
         let tapGesture_back = UITapGestureRecognizer(target: self, action: #selector(self.Edit))
         let tapGesture_front = UITapGestureRecognizer(target: self, action: #selector(self.Edit))
         Back_image.addGestureRecognizer(tapGesture_back)
-        Back_image.isUserInteractionEnabled = true
         Profile_image.addGestureRecognizer(tapGesture_front)
+        Back_image.isUserInteractionEnabled = true
         Profile_image.isUserInteractionEnabled = true
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        Profile_chk()
-    }
+    override func viewDidAppear(_ animated: Bool) { Profile_chk() } // Apper 프로필 체크
     
-    func Profile_chk() {
-        User_email.text = User_data.string(forKey: "User_ID")
-        User_name.text = User_data.string(forKey: "User_name")
-        if let front_image = User_data.object(forKey: "User_front_picture") {
+    func Profile_chk() { // 화면에 프로필 표시
+        if let name = User_data.string(forKey: "User_name") { // 이름
+            User_name.text = name
+        } else {
+            User_name.text = "닉네임"
+        }
+        if let intro = User_data.string(forKey: "User_intro") { // 소개
+            if intro == "" {
+                User_intro.text = "한줄소개를 입력해 주세요."
+            } else {
+                User_intro.text = intro
+            }
+        } else {
+            User_intro.text = "한줄소개를 입력해 주세요."
+        }
+        if let front_image = User_data.object(forKey: "User_front_picture") { // 프사
             Profile_image.image = UIImage(data: front_image as! Data)
         } else {
             Profile_image.image = UIImage(named: "front_default")
         }
-        if let back_image = User_data.object(forKey: "User_back_picture") {
+        if let back_image = User_data.object(forKey: "User_back_picture") { // 배사
             Back_image.image = UIImage(data: back_image as! Data)
         } else {
-            Back_image.image = UIImage(named: "back_default2.png")
+            Back_image.image = UIImage(named: "back_default.png")
         }
     }
     
@@ -81,15 +93,13 @@ class Setting: UIViewController {
         self.present(alert,animated: true)
     }
     
-    @IBAction func logout(_ sender: Any) {
+    @IBAction func logout(_ sender: Any) { // 로그아웃 버튼
         let alert = UIAlertController(title: "알림", message: "로그아웃 하시겠습니까?", preferredStyle: .actionSheet)
         let cancel = UIAlertAction(title: "취소", style: .cancel)
-        let ok = UIAlertAction(title: "확인", style: .destructive){
+        let ok = UIAlertAction(title: "확인", style: .destructive) {
             (result:UIAlertAction) -> Void in
-            do {
-                try Auth.auth().signOut()
-            } catch  {
-            }
+            do { try Auth.auth().signOut() }
+            catch  { }
             self.performSegue(withIdentifier: "Login", sender: self)
         }
         alert.addAction(cancel)

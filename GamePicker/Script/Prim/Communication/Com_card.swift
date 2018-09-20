@@ -1,9 +1,10 @@
-import UIKit
 import Firebase
+import UIKit
 
-class Main_card: UIViewController,UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout {
-    
+class Com_card: UIViewController,UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout {
+
     @IBOutlet var CardView: UICollectionView!
+    var which_com:Int = 0
     
     @objc  func swiped(_ gesture: UISwipeGestureRecognizer) { // 스와이프
         if gesture.direction == .left {
@@ -29,7 +30,7 @@ class Main_card: UIViewController,UICollectionViewDelegate,UICollectionViewDataS
         self.CardView.reloadData()
         refreshControl.endRefreshing()
     }
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // 스와이프 제스쳐 추가
@@ -39,38 +40,32 @@ class Main_card: UIViewController,UICollectionViewDelegate,UICollectionViewDataS
         swipeLeft.direction = UISwipeGestureRecognizerDirection.left
         self.view.addGestureRecognizer(swipeRight)
         self.view.addGestureRecognizer(swipeLeft)
-
+        
         self.CardView.addSubview(self.refreshControl)
-        // 뷰 진입시 로그인 체크하는 것임--------
-        if Auth.auth().currentUser == nil {
-            guard let login = self.storyboard?.instantiateViewController(withIdentifier: "Login") else {return}
-            self.present(login, animated: true)
-        }
-        // 뷰 진입시 로그인 체크하는 것임--------
         
         let left_but = UIButton.init(frame: CGRect.init(x: 0, y: 0, width: 30, height: 30))
         left_but.setImage(UIImage.init(named:"icon_white"), for: .normal)
         self.navigationItem.leftBarButtonItem = UIBarButtonItem.init(customView: left_but)
     }
     
-    let game_title_array = ["first","second","third","fourth"]
-    
     func numberOfSections(in collectionView: UICollectionView) -> Int { // 섹션 개수
-           return 2
+        return 2
     }
     
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int { // 섹션별 셀 수
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if section == 0 { return 1 }
         else { return 4 }
     }
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize{ // 섹션별 셀 높이
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize{
         if indexPath.section == 0 {
             return CGSize(width: view.frame.size.width - 30, height: 150)
         } else {
-            return CGSize(width: view.frame.size.width - 30, height: 380)
+            return CGSize(width: view.frame.size.width - 30, height: 185)
         }
     }
+    
+    let sort_array = ["전체 게시판","자유 게시판","짤방 게시판","질문 게시판"]
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if indexPath.section == 0 { // 메세지 카드
@@ -80,14 +75,14 @@ class Main_card: UIViewController,UICollectionViewDelegate,UICollectionViewDataS
             message_cell.message_text.text = "안녕하십니까?"
             message_cell.message_confirm.text = "설정하러 가기!"
             
-            //사실 여기는 카드뷰로 만드는 영역임
+            // 여기는 카드뷰로 만드는 영역
             message_cell.contentView.layer.cornerRadius = 4.0
             message_cell.contentView.layer.borderWidth = 1.0
             message_cell.contentView.layer.borderColor = UIColor.clear.cgColor
             message_cell.contentView.layer.masksToBounds = false
             message_cell.layer.shadowColor = UIColor.gray.cgColor
             message_cell.layer.shadowOffset = CGSize(width: 0, height: 1)
-            message_cell.layer.shadowRadius = 6.0
+            message_cell.layer.shadowRadius = 3.0
             message_cell.layer.shadowOpacity = 1.0
             message_cell.layer.masksToBounds = false
             message_cell.layer.shadowPath = UIBezierPath(roundedRect: message_cell.bounds, cornerRadius: message_cell.contentView.layer.cornerRadius).cgPath
@@ -95,24 +90,56 @@ class Main_card: UIViewController,UICollectionViewDelegate,UICollectionViewDataS
             return message_cell
             
         } else { // 게임 카드
-            let game_cell = collectionView.dequeueReusableCell(withReuseIdentifier: "game_card", for: indexPath) as! Main_cell
+            let com_cell = collectionView.dequeueReusableCell(withReuseIdentifier: "com_card", for: indexPath) as! Com_cell
             
-            game_cell.game_name.text = game_title_array[indexPath.row]
+            com_cell.com_sort.text = sort_array[indexPath.row]
             
-            //사실 여기는 카드뷰로 만드는 영역임
-            game_cell.contentView.layer.cornerRadius = 4.0
-            game_cell.contentView.layer.borderWidth = 1.0
-            game_cell.contentView.layer.borderColor = UIColor.clear.cgColor
-            game_cell.contentView.layer.masksToBounds = false
-            game_cell.layer.shadowColor = UIColor.gray.cgColor
-            game_cell.layer.shadowOffset = CGSize(width: 0, height: 1)
-            game_cell.layer.shadowRadius = 4.0
-            game_cell.layer.shadowOpacity = 1.0
-            game_cell.layer.masksToBounds = false
-            game_cell.layer.shadowPath = UIBezierPath(roundedRect: game_cell.bounds, cornerRadius: game_cell.contentView.layer.cornerRadius).cgPath
+            com_cell.first_date.text = "2004-10-20"
+            com_cell.first_prev.text = "안녕하세요 저는 삼학년팔반이십사번 정현민 입니다. 잘부탁 드립"
+            com_cell.first_comment.text = "[22]"
+            com_cell.first_image.isHidden = true
             
-            return game_cell
+            com_cell.second_date.text = "2018-9-12"
+            com_cell.second_prev.text = "게시판 일단 체크"
+            com_cell.second_comment.text = "[4]"
+            com_cell.second_image.isHidden = false
+            
+            com_cell.third_date.text = "2002-6-22"
+            com_cell.third_prev.text = "길이 어느정도가 적당할까"
+            com_cell.third_comment.text = "[1]"
+            com_cell.third_image.isHidden = true
+            
+            com_cell.fourth_date.text = "2129-12-31"
+            com_cell.fourth_prev.text = "ios 게시판"
+            com_cell.fourth_comment.text = ""
+            com_cell.fourth_image.isHidden = false
+            
+            com_cell.com_sort_but.tag = indexPath.row
+            com_cell.com_sort_but.addTarget(self, action: #selector(self.more_but), for: .touchUpInside)
+            // 여기는 카드뷰로 만드는 영역
+            com_cell.contentView.layer.cornerRadius = 4.0
+            com_cell.contentView.layer.borderWidth = 1.0
+            com_cell.contentView.layer.borderColor = UIColor.clear.cgColor
+            com_cell.contentView.layer.masksToBounds = false
+            com_cell.layer.shadowColor = UIColor.gray.cgColor
+            com_cell.layer.shadowOffset = CGSize(width: 0, height: 1)
+            com_cell.layer.shadowRadius = 3.0
+            com_cell.layer.shadowOpacity = 1.0
+            com_cell.layer.masksToBounds = false
+            com_cell.layer.shadowPath = UIBezierPath(roundedRect: com_cell.bounds, cornerRadius: com_cell.contentView.layer.cornerRadius).cgPath
+            
+            return com_cell
         }
     }
+
+    @objc func more_but(sender: UIButton){
+        which_com = sender.tag
+        self.performSegue(withIdentifier: "com_list", sender: self)
+    }
     
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let param = segue.destination as! Com_table
+        param.flag = which_com
+    }
+
 }

@@ -6,10 +6,10 @@ class Login: UIViewController,FBSDKLoginButtonDelegate {
     @IBOutlet var Easy: UIButton!
     @IBOutlet var Face: FBSDKLoginButton!
     
+    let User_data = UserDefaults.standard
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        Face.delegate = self
-        
         Easy.layer.cornerRadius = 4
         Face.layer.cornerRadius = 4
         
@@ -24,6 +24,7 @@ class Login: UIViewController,FBSDKLoginButtonDelegate {
         Face.setAttributedTitle(buttonText, for: .normal)
         // 타이틀 폰트 크기 설정
         Face.titleLabel?.font = UIFont.systemFont(ofSize: 16)
+        Face.backgroundColor = UIColor.black
     }
     
     @IBAction func Easy_Login(_ sender: Any) { // 게임피커 로그인
@@ -31,11 +32,10 @@ class Login: UIViewController,FBSDKLoginButtonDelegate {
         let cancel = UIAlertAction(title: "취소", style: .cancel)
         let ok = UIAlertAction(title: "로그인", style: .default){
             (result:UIAlertAction) -> Void in
-            // 게임피커 로그인차 확인
+            // 게임피커 로그인 확인
         }
         alert.addAction(cancel)
         alert.addAction(ok)
-        
         alert.addTextField(configurationHandler: {(tf) in
             tf.borderStyle = UITextBorderStyle.roundedRect
             tf.placeholder = "E-mail"
@@ -62,20 +62,16 @@ class Login: UIViewController,FBSDKLoginButtonDelegate {
         let credential = FacebookAuthProvider.credential(withAccessToken: FBSDKAccessToken.current().tokenString)
             Auth.auth().signInAndRetrieveData(with: credential) { (user, error) in
                 //여기는 로그인 되면
-                if error != nil {
-                    // 에러 날시
-                    return
-                }
             }
-        let User_data = UserDefaults.standard
         FBSDKProfile.loadCurrentProfile { (profile, error) in
-            User_data.set(profile?.userID, forKey: "User_ID")
-            User_data.set(profile?.name, forKey: "User_name")
-            User_data.synchronize()
+            self.User_data.set(profile?.userID, forKey: "User_ID")
+            self.User_data.set(profile?.name, forKey: "User_name")
+            self.User_data.synchronize()
         }
-        FBSDKLoginManager().logOut();
         self.presentingViewController?.dismiss(animated: true)
+        FBSDKLoginManager().logOut();
     }
-    func loginButtonDidLogOut(_ loginButton: FBSDKLoginButton!) {}
+    func loginButtonDidLogOut(_ loginButton: FBSDKLoginButton!) {
+    }
     
 }

@@ -8,22 +8,18 @@
 
 /* Begin PBXBuildFile section */
 		340C78AF2144F3AE003F3676 /* Game_List.swift in Sources */ = {isa = PBXBuildFile; fileRef = 340C78AE2144F3AE003F3676 /* Game_List.swift */; };
-		340C78B32145032B003F3676 /* back_default.png in Resources */ = {isa = PBXBuildFile; fileRef = 340C78B22145032B003F3676 /* back_default.png */; };
-		340C78B9214506F5003F3676 /* back_default2.png in Resources */ = {isa = PBXBuildFile; fileRef = 340C78B8214506F5003F3676 /* back_default2.png */; };
-		34138EB121456E8D00F8F8F4 /* Main_cell2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34138EB021456E8C00F8F8F4 /* Main_cell2.swift */; };
-		34924FCD21441BF10088023E /* default.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 34924FCC21441BF00088023E /* default.jpg */; };
+		340C78B9214506F5003F3676 /* back_default.png in Resources */ = {isa = PBXBuildFile; fileRef = 340C78B8214506F5003F3676 /* back_default.png */; };
+		34138EB121456E8D00F8F8F4 /* Message_cell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34138EB021456E8C00F8F8F4 /* Message_cell.swift */; };
 		349C4A1421443F2E003445C8 /* Main_card.swift in Sources */ = {isa = PBXBuildFile; fileRef = 349C4A1321443F2E003445C8 /* Main_card.swift */; };
 		349C4A162144419F003445C8 /* Main_cell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 349C4A152144419F003445C8 /* Main_cell.swift */; };
 		34FF49442142685F0043EF1B /* AnimUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34FF49432142685F0043EF1B /* AnimUtils.swift */; };
 		34FF4946214268640043EF1B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34FF4945214268640043EF1B /* AppDelegate.swift */; };
 		34FF494B2142687A0043EF1B /* Popular.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34FF4947214268790043EF1B /* Popular.swift */; };
-		34FF494C2142687A0043EF1B /* Communication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34FF49482142687A0043EF1B /* Communication.swift */; };
 		34FF494E2142687A0043EF1B /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34FF494A2142687A0043EF1B /* Settings.swift */; };
 		34FF4951214268830043EF1B /* Profile_Setting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34FF494F214268830043EF1B /* Profile_Setting.swift */; };
 		34FF4952214268830043EF1B /* Login.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34FF4950214268830043EF1B /* Login.swift */; };
 		34FF4955214268930043EF1B /* Loading.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 34FF4953214268930043EF1B /* Loading.storyboard */; };
 		34FF4956214268930043EF1B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 34FF4954214268930043EF1B /* Main.storyboard */; };
-		34FF4958214268B40043EF1B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 34FF4957214268B40043EF1B /* Assets.xcassets */; };
 		34FF49602142AF270043EF1B /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34FF495E2142AF260043EF1B /* FBSDKCoreKit.framework */; };
 		34FF49612142AF270043EF1B /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34FF495F2142AF260043EF1B /* FBSDKLoginKit.framework */; };
 		34FF49632142B1350043EF1B /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 34FF49622142B1350043EF1B /* GoogleService-Info.plist */; };
@@ -36,28 +32,29 @@
 		34FF498F2142B8AF0043EF1B /* Logo_white.png in Resources */ = {isa = PBXBuildFile; fileRef = 34FF498C2142B8AF0043EF1B /* Logo_white.png */; };
 		34FF49922142B8BA0043EF1B /* front_default.png in Resources */ = {isa = PBXBuildFile; fileRef = 34FF49902142B8BA0043EF1B /* front_default.png */; };
 		57E85349886153C549C6A9FB /* Pods_GamePicker.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7BB1EEC452AB9D7047168F03 /* Pods_GamePicker.framework */; };
+		D9331AAF2153C4D30025C759 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D9331AAE2153C4D20025C759 /* Assets.xcassets */; };
+		D9A13F9E2150F88F000FBBAD /* Com_card.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9A13F9D2150F88F000FBBAD /* Com_card.swift */; };
+		D9A13FA021515EF3000FBBAD /* Com_cell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9A13F9F21515EF3000FBBAD /* Com_cell.swift */; };
+		D9A13FA52151EF7A000FBBAD /* Com_table.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9A13FA42151EF7A000FBBAD /* Com_table.swift */; };
+		D9B22D362152C26300622204 /* Com_table_cell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9B22D352152C26300622204 /* Com_table_cell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		1672F286A82ED2EE47319908 /* Pods-GamePicker.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GamePicker.release.xcconfig"; path = "Pods/Target Support Files/Pods-GamePicker/Pods-GamePicker.release.xcconfig"; sourceTree = "<group>"; };
 		340C78AE2144F3AE003F3676 /* Game_List.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Game_List.swift; sourceTree = "<group>"; };
-		340C78B22145032B003F3676 /* back_default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = back_default.png; sourceTree = "<group>"; };
-		340C78B8214506F5003F3676 /* back_default2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = back_default2.png; sourceTree = "<group>"; };
-		34138EB021456E8C00F8F8F4 /* Main_cell2.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Main_cell2.swift; sourceTree = "<group>"; };
-		34924FCC21441BF00088023E /* default.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = default.jpg; sourceTree = "<group>"; };
+		340C78B8214506F5003F3676 /* back_default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = back_default.png; sourceTree = "<group>"; };
+		34138EB021456E8C00F8F8F4 /* Message_cell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Message_cell.swift; sourceTree = "<group>"; };
 		349C4A1321443F2E003445C8 /* Main_card.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Main_card.swift; sourceTree = "<group>"; };
 		349C4A152144419F003445C8 /* Main_cell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Main_cell.swift; sourceTree = "<group>"; };
 		34FF48FF214266D20043EF1B /* GamePicker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GamePicker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		34FF49432142685F0043EF1B /* AnimUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnimUtils.swift; sourceTree = "<group>"; };
 		34FF4945214268640043EF1B /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		34FF4947214268790043EF1B /* Popular.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Popular.swift; sourceTree = "<group>"; };
-		34FF49482142687A0043EF1B /* Communication.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Communication.swift; sourceTree = "<group>"; };
 		34FF494A2142687A0043EF1B /* Settings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		34FF494F214268830043EF1B /* Profile_Setting.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Profile_Setting.swift; sourceTree = "<group>"; };
 		34FF4950214268830043EF1B /* Login.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Login.swift; sourceTree = "<group>"; };
 		34FF4953214268930043EF1B /* Loading.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Loading.storyboard; sourceTree = "<group>"; };
 		34FF4954214268930043EF1B /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
-		34FF4957214268B40043EF1B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		34FF495A214268DF0043EF1B /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		34FF495E2142AF260043EF1B /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKCoreKit.framework; sourceTree = "<group>"; };
 		34FF495F2142AF260043EF1B /* FBSDKLoginKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKLoginKit.framework; sourceTree = "<group>"; };
@@ -72,6 +69,11 @@
 		34FF49902142B8BA0043EF1B /* front_default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = front_default.png; sourceTree = "<group>"; };
 		7BB1EEC452AB9D7047168F03 /* Pods_GamePicker.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_GamePicker.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8108C77201ECB1DC63FA09D7 /* Pods-GamePicker.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GamePicker.debug.xcconfig"; path = "Pods/Target Support Files/Pods-GamePicker/Pods-GamePicker.debug.xcconfig"; sourceTree = "<group>"; };
+		D9331AAE2153C4D20025C759 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		D9A13F9D2150F88F000FBBAD /* Com_card.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Com_card.swift; sourceTree = "<group>"; };
+		D9A13F9F21515EF3000FBBAD /* Com_cell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Com_cell.swift; sourceTree = "<group>"; };
+		D9A13FA42151EF7A000FBBAD /* Com_table.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Com_table.swift; sourceTree = "<group>"; };
+		D9B22D352152C26300622204 /* Com_table_cell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Com_table_cell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -103,7 +105,6 @@
 			children = (
 				349C4A1321443F2E003445C8 /* Main_card.swift */,
 				349C4A152144419F003445C8 /* Main_cell.swift */,
-				34138EB021456E8C00F8F8F4 /* Main_cell2.swift */,
 			);
 			path = Main;
 			sourceTree = "<group>";
@@ -170,10 +171,11 @@
 		34FF4941214268370043EF1B /* Prim */ = {
 			isa = PBXGroup;
 			children = (
+				D9A13F9C2150F84A000FBBAD /* Communication */,
 				34924FC62143C0730088023E /* Main */,
 				340C78AB2144EF27003F3676 /* Popular */,
-				34FF49482142687A0043EF1B /* Communication.swift */,
 				34FF494A2142687A0043EF1B /* Settings.swift */,
+				34138EB021456E8C00F8F8F4 /* Message_cell.swift */,
 			);
 			path = Prim;
 			sourceTree = "<group>";
@@ -200,7 +202,7 @@
 		34FF496C2142B6D30043EF1B /* Resource */ = {
 			isa = PBXGroup;
 			children = (
-				34FF4957214268B40043EF1B /* Assets.xcassets */,
+				D9331AAE2153C4D20025C759 /* Assets.xcassets */,
 				34FF49752142B7190043EF1B /* Login */,
 				34FF496E2142B6ED0043EF1B /* Profile */,
 				34FF496D2142B6E90043EF1B /* Etc */,
@@ -211,7 +213,6 @@
 		34FF496D2142B6E90043EF1B /* Etc */ = {
 			isa = PBXGroup;
 			children = (
-				34924FCC21441BF00088023E /* default.jpg */,
 				34FF498B2142B8AF0043EF1B /* Camera.png */,
 				34FF498A2142B8AF0043EF1B /* Edit.png */,
 				34FF498C2142B8AF0043EF1B /* Logo_white.png */,
@@ -222,8 +223,7 @@
 		34FF496E2142B6ED0043EF1B /* Profile */ = {
 			isa = PBXGroup;
 			children = (
-				340C78B22145032B003F3676 /* back_default.png */,
-				340C78B8214506F5003F3676 /* back_default2.png */,
+				340C78B8214506F5003F3676 /* back_default.png */,
 				34FF49902142B8BA0043EF1B /* front_default.png */,
 			);
 			path = Profile;
@@ -254,6 +254,17 @@
 				1672F286A82ED2EE47319908 /* Pods-GamePicker.release.xcconfig */,
 			);
 			name = Pods;
+			sourceTree = "<group>";
+		};
+		D9A13F9C2150F84A000FBBAD /* Communication */ = {
+			isa = PBXGroup;
+			children = (
+				D9A13F9D2150F88F000FBBAD /* Com_card.swift */,
+				D9A13F9F21515EF3000FBBAD /* Com_cell.swift */,
+				D9A13FA42151EF7A000FBBAD /* Com_table.swift */,
+				D9B22D352152C26300622204 /* Com_table_cell.swift */,
+			);
+			path = Communication;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -317,19 +328,17 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				340C78B32145032B003F3676 /* back_default.png in Resources */,
-				34924FCD21441BF10088023E /* default.jpg in Resources */,
 				34FF497E2142B7290043EF1B /* FBlogo.png in Resources */,
-				340C78B9214506F5003F3676 /* back_default2.png in Resources */,
+				340C78B9214506F5003F3676 /* back_default.png in Resources */,
 				34FF49632142B1350043EF1B /* GoogleService-Info.plist in Resources */,
 				34FF4955214268930043EF1B /* Loading.storyboard in Resources */,
 				34FF4956214268930043EF1B /* Main.storyboard in Resources */,
 				34FF498F2142B8AF0043EF1B /* Logo_white.png in Resources */,
 				34FF49742142B70F0043EF1B /* Login.jpeg in Resources */,
 				34FF49922142B8BA0043EF1B /* front_default.png in Resources */,
-				34FF4958214268B40043EF1B /* Assets.xcassets in Resources */,
 				34FF498E2142B8AF0043EF1B /* Camera.png in Resources */,
 				34FF498D2142B8AF0043EF1B /* Edit.png in Resources */,
+				D9331AAF2153C4D30025C759 /* Assets.xcassets in Resources */,
 				34FF497C2142B7290043EF1B /* FB.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -385,14 +394,17 @@
 			buildActionMask = 2147483647;
 			files = (
 				34FF4951214268830043EF1B /* Profile_Setting.swift in Sources */,
+				D9A13F9E2150F88F000FBBAD /* Com_card.swift in Sources */,
 				34FF494E2142687A0043EF1B /* Settings.swift in Sources */,
 				349C4A162144419F003445C8 /* Main_cell.swift in Sources */,
+				D9B22D362152C26300622204 /* Com_table_cell.swift in Sources */,
 				340C78AF2144F3AE003F3676 /* Game_List.swift in Sources */,
 				349C4A1421443F2E003445C8 /* Main_card.swift in Sources */,
-				34138EB121456E8D00F8F8F4 /* Main_cell2.swift in Sources */,
-				34FF494C2142687A0043EF1B /* Communication.swift in Sources */,
+				D9A13FA52151EF7A000FBBAD /* Com_table.swift in Sources */,
+				34138EB121456E8D00F8F8F4 /* Message_cell.swift in Sources */,
 				34FF4946214268640043EF1B /* AppDelegate.swift in Sources */,
 				34FF49442142685F0043EF1B /* AnimUtils.swift in Sources */,
+				D9A13FA021515EF3000FBBAD /* Com_cell.swift in Sources */,
 				34FF494B2142687A0043EF1B /* Popular.swift in Sources */,
 				34FF4952214268830043EF1B /* Login.swift in Sources */,
 			);
