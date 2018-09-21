@@ -38,10 +38,9 @@ class Setting: UIViewController {
         
         Profile_image.layer.masksToBounds = true
         Profile_image.layer.cornerRadius = Profile_image.frame.size.height/2;
-        Profile_image.layer.borderWidth = 0.5
+        Profile_image.layer.borderWidth = 3
         Profile_image.layer.borderColor = UIColor.white.cgColor
-        Profile_image.clipsToBounds = true;
-        Back_image.layer.cornerRadius = 10
+        Back_image.layer.cornerRadius = 5
         Back_image.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
         
         let tapGesture_back = UITapGestureRecognizer(target: self, action: #selector(self.Edit))
@@ -98,9 +97,11 @@ class Setting: UIViewController {
         let cancel = UIAlertAction(title: "취소", style: .cancel)
         let ok = UIAlertAction(title: "확인", style: .destructive) {
             (result:UIAlertAction) -> Void in
-            do { try Auth.auth().signOut() }
+            do {
+                try Auth.auth().signOut()
+                self.performSegue(withIdentifier: "Login", sender: self)
+            }
             catch  { }
-            self.performSegue(withIdentifier: "Login", sender: self)
         }
         alert.addAction(cancel)
         alert.addAction(ok)

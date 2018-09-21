@@ -1,4 +1,5 @@
 import UIKit
+import Firebase
 
 class Profile_Setting: UIViewController,UIImagePickerControllerDelegate,UINavigationControllerDelegate,UITextFieldDelegate {
     @IBOutlet var Profile_image: UIImageView!
@@ -34,12 +35,15 @@ class Profile_Setting: UIViewController,UIImagePickerControllerDelegate,UINaviga
         
         // 프로필 사진, 배경사진 모양 설정
         Profile_image.layer.masksToBounds = true
-        Profile_image.layer.cornerRadius = Profile_image.frame.size.height/2;
-        Profile_image.layer.borderWidth = 1
+        Profile_image.layer.cornerRadius = Profile_image.frame.size.height/2
+        Profile_image.layer.borderWidth = 3
         Profile_image.layer.borderColor = UIColor.white.cgColor
         Profile_image.clipsToBounds = true;
-        Back_image.layer.cornerRadius = 10
-        Back_image.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
+        Back_image.layer.masksToBounds = false
+        Back_image.layer.shadowOpacity = 0.5
+        Back_image.layer.shadowRadius = 15
+        Back_image.layer.shadowColor = UIColor.red.cgColor
+        Back_image.layer.shadowOffset = CGSize.init(width: 0, height: 8)
         
         User_intro.borderStyle = .none
         User_intro.backgroundColor = UIColor.white
@@ -111,7 +115,10 @@ class Profile_Setting: UIViewController,UIImagePickerControllerDelegate,UINaviga
         }
     }
     // 밑 함수 두개 키보드 제어
-    @objc func endEditing(){ User_intro.resignFirstResponder() }
+    @objc func endEditing() {
+        User_intro.resignFirstResponder()
+        User_name.resignFirstResponder()
+    }
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true
@@ -145,6 +152,11 @@ class Profile_Setting: UIViewController,UIImagePickerControllerDelegate,UINaviga
             if textField.text != "" {
                 self.User_data.set(textField.text, forKey: "User_name")
                 User_name.placeholder = User_data.string(forKey: "User_name")
+            
+                let changeRequest = Auth.auth().currentUser?.createProfileChangeRequest() // firebase 전송
+                changeRequest?.displayName = textField.text
+                changeRequest?.commitChanges { (error) in
+                }
             } else {
                 textField.text = User_data.string(forKey: "User_name")
                 text_alert()
@@ -178,7 +190,7 @@ class Profile_Setting: UIViewController,UIImagePickerControllerDelegate,UINaviga
     }
     
     func text_alert() { // 최소 1자
-        let alert = UIAlertController(title: nil, message: "사용자 이름은 필수 입력 항목입니다.", preferredStyle: .alert)
+        let alert = UIAlertController(title: nil, message: "이름은 필수입력 항목입니다.", preferredStyle: .alert)
         let ok = UIAlertAction(title: "확인", style: .default) {
             (result:UIAlertAction) -> Void in
             self.User_name.becomeFirstResponder()

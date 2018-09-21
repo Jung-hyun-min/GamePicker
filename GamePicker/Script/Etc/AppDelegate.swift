@@ -5,9 +5,16 @@ import UserNotifications
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
-
+    // 회원 가입 변수
+    var name : String?
+    var birth : String?
+    var sex : String?
+    var email : String?
+    var password : String?
     var window: UIWindow?
-
+    // 회원 가입 변수
+    
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         FirebaseApp.configure()
         sleep(1)

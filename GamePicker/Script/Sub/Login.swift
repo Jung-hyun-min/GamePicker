@@ -3,14 +3,14 @@ import Firebase
 import FBSDKLoginKit
 
 class Login: UIViewController,FBSDKLoginButtonDelegate {
-    @IBOutlet var Easy: UIButton!
+    @IBOutlet var Create: UIButton!
     @IBOutlet var Face: FBSDKLoginButton!
     
     let User_data = UserDefaults.standard
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        Easy.layer.cornerRadius = 4
+        Create.layer.cornerRadius = 4
         Face.layer.cornerRadius = 4
         
         // 높이 잠금 해제
@@ -32,19 +32,24 @@ class Login: UIViewController,FBSDKLoginButtonDelegate {
         let cancel = UIAlertAction(title: "취소", style: .cancel)
         let ok = UIAlertAction(title: "로그인", style: .default){
             (result:UIAlertAction) -> Void in
-            // 게임피커 로그인 확인
+            
+            let email = alert.textFields?[0].text
+            let password = alert.textFields?[1].text
+            Auth.auth().signIn(withEmail: email ?? "", password: password ?? "") { (user, error) in
+                if error != nil { print("failed")
+                    return } // 실패시 액션 추가
+                print("Success")
+            }
         }
         alert.addAction(cancel)
         alert.addAction(ok)
         alert.addTextField(configurationHandler: {(tf) in
-            tf.borderStyle = UITextBorderStyle.roundedRect
             tf.placeholder = "E-mail"
             tf.enablesReturnKeyAutomatically = true
             tf.keyboardType = UIKeyboardType.emailAddress
             tf.isSecureTextEntry = false
         })
         alert.addTextField(configurationHandler: {(tf) in
-            tf.borderStyle = UITextBorderStyle.roundedRect
             tf.placeholder = "PassWord"
             tf.keyboardType = UIKeyboardType.alphabet
             tf.isSecureTextEntry = true
@@ -52,25 +57,29 @@ class Login: UIViewController,FBSDKLoginButtonDelegate {
         })
         self.present(alert, animated: true)
     }
-    
-    @IBAction func Register(_ sender: Any) {
-        
-    }
 
     func loginButton(_ loginButton: FBSDKLoginButton!, didCompleteWith result: FBSDKLoginManagerLoginResult?, error: Error!) {
         if (result?.token == nil) { return }
+        if (error != nil) { return }
         let credential = FacebookAuthProvider.credential(withAccessToken: FBSDKAccessToken.current().tokenString)
-            Auth.auth().signInAndRetrieveData(with: credential) { (user, error) in
-                //여기는 로그인 되면
-            }
-        FBSDKProfile.loadCurrentProfile { (profile, error) in
-            self.User_data.set(profile?.userID, forKey: "User_ID")
-            self.User_data.set(profile?.name, forKey: "User_name")
-            self.User_data.synchronize()
+        
+        Auth.auth().signInAndRetrieveData(with: credential) { (authResult, error) in
+            if error != nil { return }
+            let user = Auth.auth().currentUser
+            self.User_data.set(user?.displayName, forKey: "User_name")
+            self.User_data.set(user?.email, forKey: "User_email")
+            self.User_data.set(user?.uid, forKey: "User_uid")
         }
+        //
+        //FBSDKProfile.loadCurrentProfile { (profile, error) in
+        //    self.User_data.set(profile?.name, forKey: "User_name")
+        //    self.User_data.synchronize()
+        //}
+        // 페이스북 프로필 정보
         self.presentingViewController?.dismiss(animated: true)
         FBSDKLoginManager().logOut();
     }
+    
     func loginButtonDidLogOut(_ loginButton: FBSDKLoginButton!) {
     }
     
