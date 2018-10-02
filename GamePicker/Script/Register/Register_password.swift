@@ -12,7 +12,7 @@ class Register_password: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        hello.text = (User?.name)! + " 님"
+        hello.text = (User?.name)! + "님"
         warn.isHidden = true
         next_but_o.layer.cornerRadius = 5
         
@@ -54,10 +54,7 @@ class Register_password: UIViewController {
             warn.text = "문자 + 숫자 포함 15자 이내로 설정해주세요"
         } else {
             User?.password = password_field.text
-            Auth.auth().createUser(withEmail: (User?.email)!, password: (User?.password)!) { (authResult, error) in
-                if error != nil { return }
-                self.performSegue(withIdentifier: "verify", sender: self)
-            }
+            self.performSegue(withIdentifier: "verify", sender: self)
         }
     }
     

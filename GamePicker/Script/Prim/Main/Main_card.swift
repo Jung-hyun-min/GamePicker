@@ -1,5 +1,6 @@
 import UIKit
 import Firebase
+import AudioToolbox
 
 class Main_card: UIViewController,UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout {
     
@@ -29,28 +30,48 @@ class Main_card: UIViewController,UICollectionViewDelegate,UICollectionViewDataS
         self.CardView.reloadData()
         refreshControl.endRefreshing()
     }
+    
+    func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+        if (velocity.y > 0) {
+            UIView.animate(withDuration: 2.5, delay: 0, options: UIViewAnimationOptions(), animations: {
+                self.navigationController?.setNavigationBarHidden(true, animated: true)
+            }, completion: nil)
+        } else {
+            UIView.animate(withDuration: 2.5, delay: 0, options: UIViewAnimationOptions(), animations: {
+                self.navigationController?.setNavigationBarHidden(false, animated: true)
+            }, completion: nil)
+        }
+    } // 스크롤 상태바 제어
+    
+    @IBAction func search(_ sender: Any) {
+        AudioServicesPlaySystemSound(1520)
+    }
+    @IBAction func setting(_ sender: Any) {
+        AudioServicesPlaySystemSound(1519)
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         // 스와이프 제스쳐 추가
         let swipeRight = UISwipeGestureRecognizer(target: self, action:  #selector(swiped))
-        let swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(swiped))
+        let swipeLeft  = UISwipeGestureRecognizer(target: self, action: #selector(swiped))
         swipeRight.direction = UISwipeGestureRecognizerDirection.right
-        swipeLeft.direction = UISwipeGestureRecognizerDirection.left
+        swipeLeft.direction  = UISwipeGestureRecognizerDirection.left
         self.view.addGestureRecognizer(swipeRight)
         self.view.addGestureRecognizer(swipeLeft)
 
         self.CardView.addSubview(self.refreshControl)
-        // 뷰 진입시 로그인 체크하는 것임--------
-        if Auth.auth().currentUser == nil {
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        let ud = UserDefaults.standard
+        if ud.bool(forKey: "tutorial") == false {
+            let vc = self.instanceTutorialVC(name: "MasterVC")
+            self.present(vc!, animated: true)
+        } else if Auth.auth().currentUser == nil {
             guard let login = self.storyboard?.instantiateViewController(withIdentifier: "Login") else {return}
             self.present(login, animated: true)
         }
-        // 뷰 진입시 로그인 체크하는 것임--------
-        
-        let left_but = UIButton.init(frame: CGRect.init(x: 0, y: 0, width: 30, height: 30))
-        left_but.setImage(UIImage.init(named:"icon_white"), for: .normal)
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem.init(customView: left_but)
     }
     
     let game_title_array = ["first","second","third","fourth"]
@@ -76,21 +97,21 @@ class Main_card: UIViewController,UICollectionViewDelegate,UICollectionViewDataS
         if indexPath.section == 0 { // 메세지 카드
             let message_cell = collectionView.dequeueReusableCell(withReuseIdentifier: "message_card", for: indexPath) as! Message_cell
             
-            message_cell.message_title.text = "질문을 할까요?"
-            message_cell.message_text.text = "안녕하십니까?"
+            message_cell.message_title.text   = "질문을 할까요?"
+            message_cell.message_text.text    = "안녕하십니까?"
             message_cell.message_confirm.text = "설정하러 가기!"
             
             //사실 여기는 카드뷰로 만드는 영역임
-            message_cell.contentView.layer.cornerRadius = 4.0
-            message_cell.contentView.layer.borderWidth = 1.0
-            message_cell.contentView.layer.borderColor = UIColor.clear.cgColor
+            message_cell.contentView.layer.cornerRadius  = 4.0
+            message_cell.contentView.layer.borderWidth   = 1.0
+            message_cell.contentView.layer.borderColor   = UIColor.clear.cgColor
             message_cell.contentView.layer.masksToBounds = false
-            message_cell.layer.shadowColor = UIColor.gray.cgColor
-            message_cell.layer.shadowOffset = CGSize(width: 0, height: 1)
-            message_cell.layer.shadowRadius = 6.0
-            message_cell.layer.shadowOpacity = 1.0
-            message_cell.layer.masksToBounds = false
-            message_cell.layer.shadowPath = UIBezierPath(roundedRect: message_cell.bounds, cornerRadius: message_cell.contentView.layer.cornerRadius).cgPath
+            message_cell.layer.shadowColor               = UIColor.gray.cgColor
+            message_cell.layer.shadowOffset              = CGSize(width: 0, height: 1)
+            message_cell.layer.shadowRadius              = 6.0
+            message_cell.layer.shadowOpacity             = 1.0
+            message_cell.layer.masksToBounds             = false
+            message_cell.layer.shadowPath                = UIBezierPath(roundedRect: message_cell.bounds, cornerRadius: message_cell.contentView.layer.cornerRadius).cgPath
             
             return message_cell
             
@@ -100,16 +121,16 @@ class Main_card: UIViewController,UICollectionViewDelegate,UICollectionViewDataS
             game_cell.game_name.text = game_title_array[indexPath.row]
             
             //사실 여기는 카드뷰로 만드는 영역임
-            game_cell.contentView.layer.cornerRadius = 4.0
-            game_cell.contentView.layer.borderWidth = 1.0
-            game_cell.contentView.layer.borderColor = UIColor.clear.cgColor
+            game_cell.contentView.layer.cornerRadius  = 4.0
+            game_cell.contentView.layer.borderWidth   = 1.0
+            game_cell.contentView.layer.borderColor   = UIColor.clear.cgColor
             game_cell.contentView.layer.masksToBounds = false
-            game_cell.layer.shadowColor = UIColor.gray.cgColor
-            game_cell.layer.shadowOffset = CGSize(width: 0, height: 1)
-            game_cell.layer.shadowRadius = 4.0
-            game_cell.layer.shadowOpacity = 1.0
-            game_cell.layer.masksToBounds = false
-            game_cell.layer.shadowPath = UIBezierPath(roundedRect: game_cell.bounds, cornerRadius: game_cell.contentView.layer.cornerRadius).cgPath
+            game_cell.layer.shadowColor               = UIColor.gray.cgColor
+            game_cell.layer.shadowOffset              = CGSize(width: 0, height: 1)
+            game_cell.layer.shadowRadius              = 4.0
+            game_cell.layer.shadowOpacity             = 1.0
+            game_cell.layer.masksToBounds             = false
+            game_cell.layer.shadowPath                = UIBezierPath(roundedRect: game_cell.bounds, cornerRadius: game_cell.contentView.layer.cornerRadius).cgPath
             
             return game_cell
         }

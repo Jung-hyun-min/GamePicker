@@ -19,7 +19,7 @@ class Register_sex: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         next_but_o.layer.cornerRadius = 5
-        hello.text = (User?.name)! + " 님"
+        hello.text = (User?.name)! + "님"
     }
     
     @IBAction func undo(_ sender: Any) {

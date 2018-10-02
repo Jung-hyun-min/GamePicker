@@ -19,7 +19,7 @@ class Register_adress: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        hello.text = (User?.name)! + " 님"
+        hello.text = (User?.name)! + "님"
         warn.isHidden = true
         next_but_o.layer.cornerRadius = 5
         

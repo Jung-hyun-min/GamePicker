@@ -21,8 +21,8 @@ class Register_nmae: UIViewController,UITextFieldDelegate {
         name_field.textColor = UIColor.black
         
         self.view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(endEditing)))
-
     }
+    
     @IBAction func next_but_a(_ sender: Any) {
         let User = UIApplication.shared.delegate as? AppDelegate
         

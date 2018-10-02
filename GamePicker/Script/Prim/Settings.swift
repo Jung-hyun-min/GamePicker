@@ -29,18 +29,18 @@ class Setting: UIViewController {
         super.viewDidLoad()
         Profile_chk()
         // 스와이프 제스쳐 추가
-        let swipeRight = UISwipeGestureRecognizer(target: self, action:  #selector(swiped))
-        let swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(swiped))
+        let swipeRight       = UISwipeGestureRecognizer(target: self, action:  #selector(swiped))
+        let swipeLeft        = UISwipeGestureRecognizer(target: self, action: #selector(swiped))
         swipeRight.direction = UISwipeGestureRecognizerDirection.right
-        swipeLeft.direction = UISwipeGestureRecognizerDirection.left
+        swipeLeft.direction  = UISwipeGestureRecognizerDirection.left
         self.view.addGestureRecognizer(swipeRight)
         self.view.addGestureRecognizer(swipeLeft)
         
         Profile_image.layer.masksToBounds = true
-        Profile_image.layer.cornerRadius = Profile_image.frame.size.height/2;
-        Profile_image.layer.borderWidth = 3
-        Profile_image.layer.borderColor = UIColor.white.cgColor
-        Back_image.layer.cornerRadius = 5
+        Profile_image.layer.cornerRadius  = Profile_image.frame.size.height/2;
+        Profile_image.layer.borderWidth   = 3
+        Profile_image.layer.borderColor   = UIColor.white.cgColor
+        Back_image.layer.cornerRadius     = 5
         Back_image.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
         
         let tapGesture_back = UITapGestureRecognizer(target: self, action: #selector(self.Edit))
@@ -99,7 +99,7 @@ class Setting: UIViewController {
             (result:UIAlertAction) -> Void in
             do {
                 try Auth.auth().signOut()
-                self.performSegue(withIdentifier: "Login", sender: self)
+                self.performSegue(withIdentifier: "Logout", sender: self)
             }
             catch  { }
         }

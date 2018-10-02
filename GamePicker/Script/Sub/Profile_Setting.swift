@@ -9,11 +9,12 @@ class Profile_Setting: UIViewController,UIImagePickerControllerDelegate,UINaviga
     
     @IBOutlet var name_limit: UILabel!
     @IBOutlet var intro_limit: UILabel!
+
     
-    var keyboardShown:Bool = false // 키보드 상태 확인
+    var keyboardShown:Bool = false// 키보드 상태 확인
     var originY:CGFloat? // 오브젝트의 기본 위치
-    
-    var picture: Int = 0
+
+    var picture: Int       = 0
     let User_data = UserDefaults.standard
     
     // 키보드 옵저버 관련
@@ -35,44 +36,44 @@ class Profile_Setting: UIViewController,UIImagePickerControllerDelegate,UINaviga
         
         // 프로필 사진, 배경사진 모양 설정
         Profile_image.layer.masksToBounds = true
-        Profile_image.layer.cornerRadius = Profile_image.frame.size.height/2
-        Profile_image.layer.borderWidth = 3
-        Profile_image.layer.borderColor = UIColor.white.cgColor
-        Profile_image.clipsToBounds = true;
-        Back_image.layer.masksToBounds = false
-        Back_image.layer.shadowOpacity = 0.5
-        Back_image.layer.shadowRadius = 15
-        Back_image.layer.shadowColor = UIColor.red.cgColor
-        Back_image.layer.shadowOffset = CGSize.init(width: 0, height: 8)
+        Profile_image.layer.cornerRadius  = Profile_image.frame.size.height/2
+        Profile_image.layer.borderWidth   = 3
+        Profile_image.layer.borderColor   = UIColor.white.cgColor
+        Profile_image.clipsToBounds       = true;
+        Back_image.layer.masksToBounds    = false
+        Back_image.layer.shadowOpacity    = 0.5
+        Back_image.layer.shadowRadius     = 15
+        Back_image.layer.shadowColor      = UIColor.red.cgColor
+        Back_image.layer.shadowOffset     = CGSize.init(width: 0, height: 8)
         
-        User_intro.borderStyle = .none
-        User_intro.backgroundColor = UIColor.white
-        User_intro.layer.cornerRadius = User_intro.frame.size.height / 2
-        User_intro.layer.borderWidth = 0.25
-        User_intro.layer.borderColor = UIColor.white.cgColor
+        User_intro.borderStyle         = .none
+        User_intro.backgroundColor     = UIColor.white
+        User_intro.layer.cornerRadius  = User_intro.frame.size.height / 2
+        User_intro.layer.borderWidth   = 0.25
+        User_intro.layer.borderColor   = UIColor.white.cgColor
         User_intro.layer.shadowOpacity = 1
-        User_intro.layer.shadowRadius = 3.0
-        User_intro.layer.shadowOffset = CGSize.zero
-        User_intro.layer.shadowColor = UIColor.lightGray.cgColor
-        var paddingView : UIView = UIView(frame: CGRect(x: 0, y: 0, width: 20, height: User_intro.frame.height))
-        User_intro.leftView = paddingView
-        User_intro.leftViewMode = UITextFieldViewMode.always
-        
-        User_name.borderStyle = .none
-        User_name.backgroundColor = UIColor.white
-        User_name.layer.cornerRadius = User_name.frame.size.height / 2
-        User_name.layer.borderWidth = 0.25
-        User_name.layer.borderColor = UIColor.white.cgColor
-        User_name.layer.shadowOpacity = 1
-        User_name.layer.shadowRadius = 3.0
-        User_name.layer.shadowOffset = CGSize.zero
-        User_name.layer.shadowColor = UIColor.lightGray.cgColor
-        paddingView = UIView(frame: CGRect(x: 0, y: 0, width: 20, height: User_name.frame.height))
-        User_name.leftView = paddingView
-        User_name.leftViewMode = UITextFieldViewMode.always
+        User_intro.layer.shadowRadius  = 3.0
+        User_intro.layer.shadowOffset  = CGSize.zero
+        User_intro.layer.shadowColor   = UIColor.lightGray.cgColor
+        var paddingView : UIView       = UIView(frame: CGRect(x: 0, y: 0, width: 20, height: User_intro.frame.height))
+        User_intro.leftView            = paddingView
+        User_intro.leftViewMode        = UITextFieldViewMode.always
+
+        User_name.borderStyle          = .none
+        User_name.backgroundColor      = UIColor.white
+        User_name.layer.cornerRadius   = User_name.frame.size.height / 2
+        User_name.layer.borderWidth    = 0.25
+        User_name.layer.borderColor    = UIColor.white.cgColor
+        User_name.layer.shadowOpacity  = 1
+        User_name.layer.shadowRadius   = 3.0
+        User_name.layer.shadowOffset   = CGSize.zero
+        User_name.layer.shadowColor    = UIColor.lightGray.cgColor
+        paddingView                    = UIView(frame: CGRect(x: 0, y: 0, width: 20, height: User_name.frame.height))
+        User_name.leftView             = paddingView
+        User_name.leftViewMode         = UITextFieldViewMode.always
         
         // 초기 텍스트 설정
-        name_limit.text = "\(User_name.text?.count ?? 0) / 10"
+        name_limit.text  = "\(User_name.text?.count ?? 0) / 10"
         intro_limit.text = "\(User_intro.text?.count ?? 0) / 30"
         
         //키보드를 제외한 모든곳 탭제스쳐 추가
@@ -152,11 +153,9 @@ class Profile_Setting: UIViewController,UIImagePickerControllerDelegate,UINaviga
             if textField.text != "" {
                 self.User_data.set(textField.text, forKey: "User_name")
                 User_name.placeholder = User_data.string(forKey: "User_name")
-            
                 let changeRequest = Auth.auth().currentUser?.createProfileChangeRequest() // firebase 전송
                 changeRequest?.displayName = textField.text
-                changeRequest?.commitChanges { (error) in
-                }
+                changeRequest?.commitChanges { (error) in }
             } else {
                 textField.text = User_data.string(forKey: "User_name")
                 text_alert()
