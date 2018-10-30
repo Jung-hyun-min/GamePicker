@@ -27,12 +27,15 @@ class Setting: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        //동기화
         Profile_chk()
+        
         // 스와이프 제스쳐 추가
-        let swipeRight       = UISwipeGestureRecognizer(target: self, action:  #selector(swiped))
-        let swipeLeft        = UISwipeGestureRecognizer(target: self, action: #selector(swiped))
-        swipeRight.direction = UISwipeGestureRecognizerDirection.right
-        swipeLeft.direction  = UISwipeGestureRecognizerDirection.left
+        let swipeRight = UISwipeGestureRecognizer(target: self, action:  #selector(swiped))
+        let swipeLeft  = UISwipeGestureRecognizer(target: self, action: #selector(swiped))
+        swipeRight.direction = UISwipeGestureRecognizer.Direction.right
+        swipeLeft.direction  = UISwipeGestureRecognizer.Direction.left
         self.view.addGestureRecognizer(swipeRight)
         self.view.addGestureRecognizer(swipeLeft)
         
@@ -40,10 +43,10 @@ class Setting: UIViewController {
         Profile_image.layer.cornerRadius  = Profile_image.frame.size.height/2;
         Profile_image.layer.borderWidth   = 3
         Profile_image.layer.borderColor   = UIColor.white.cgColor
-        Back_image.layer.cornerRadius     = 5
+        Back_image.layer.cornerRadius  = 5
         Back_image.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
         
-        let tapGesture_back = UITapGestureRecognizer(target: self, action: #selector(self.Edit))
+        let tapGesture_back  = UITapGestureRecognizer(target: self, action: #selector(self.Edit))
         let tapGesture_front = UITapGestureRecognizer(target: self, action: #selector(self.Edit))
         Back_image.addGestureRecognizer(tapGesture_back)
         Profile_image.addGestureRecognizer(tapGesture_front)

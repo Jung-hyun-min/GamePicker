@@ -6,6 +6,8 @@ class Main_card: UIViewController,UICollectionViewDelegate,UICollectionViewDataS
     
     @IBOutlet var CardView: UICollectionView!
     
+    let User_data = UserDefaults.standard
+    
     @objc  func swiped(_ gesture: UISwipeGestureRecognizer) { // 스와이프
         if gesture.direction == .left {
             if (self.tabBarController?.selectedIndex)! < 3 {
@@ -33,11 +35,11 @@ class Main_card: UIViewController,UICollectionViewDelegate,UICollectionViewDataS
     
     func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
         if (velocity.y > 0) {
-            UIView.animate(withDuration: 2.5, delay: 0, options: UIViewAnimationOptions(), animations: {
+            UIView.animate(withDuration: 2.5, delay: 0, options: UIView.AnimationOptions(), animations: {
                 self.navigationController?.setNavigationBarHidden(true, animated: true)
             }, completion: nil)
         } else {
-            UIView.animate(withDuration: 2.5, delay: 0, options: UIViewAnimationOptions(), animations: {
+            UIView.animate(withDuration: 2.5, delay: 0, options: UIView.AnimationOptions(), animations: {
                 self.navigationController?.setNavigationBarHidden(false, animated: true)
             }, completion: nil)
         }
@@ -52,11 +54,12 @@ class Main_card: UIViewController,UICollectionViewDelegate,UICollectionViewDataS
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         // 스와이프 제스쳐 추가
         let swipeRight = UISwipeGestureRecognizer(target: self, action:  #selector(swiped))
         let swipeLeft  = UISwipeGestureRecognizer(target: self, action: #selector(swiped))
-        swipeRight.direction = UISwipeGestureRecognizerDirection.right
-        swipeLeft.direction  = UISwipeGestureRecognizerDirection.left
+        swipeRight.direction = UISwipeGestureRecognizer.Direction.right
+        swipeLeft.direction  = UISwipeGestureRecognizer.Direction.left
         self.view.addGestureRecognizer(swipeRight)
         self.view.addGestureRecognizer(swipeLeft)
 
@@ -64,8 +67,14 @@ class Main_card: UIViewController,UICollectionViewDelegate,UICollectionViewDataS
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        let ud = UserDefaults.standard
-        if ud.bool(forKey: "tutorial") == false {
+        let User_data = UserDefaults.standard
+        // 유저 동기화
+        let user = Auth.auth().currentUser
+        self.User_data.set(user?.displayName, forKey: "User_name")
+        self.User_data.set(user?.email, forKey: "User_email")
+        self.User_data.set(user?.uid, forKey: "User_uid")
+        
+        if User_data.bool(forKey: "tutorial") == false {
             let vc = self.instanceTutorialVC(name: "MasterVC")
             self.present(vc!, animated: true)
         } else if Auth.auth().currentUser == nil {
@@ -99,19 +108,19 @@ class Main_card: UIViewController,UICollectionViewDelegate,UICollectionViewDataS
             
             message_cell.message_title.text   = "질문을 할까요?"
             message_cell.message_text.text    = "안녕하십니까?"
-            message_cell.message_confirm.text = "설정하러 가기!"
+            message_cell.message_confirm.setTitle("설정하러 가기!", for: .normal)
             
             //사실 여기는 카드뷰로 만드는 영역임
             message_cell.contentView.layer.cornerRadius  = 4.0
             message_cell.contentView.layer.borderWidth   = 1.0
             message_cell.contentView.layer.borderColor   = UIColor.clear.cgColor
             message_cell.contentView.layer.masksToBounds = false
-            message_cell.layer.shadowColor               = UIColor.gray.cgColor
-            message_cell.layer.shadowOffset              = CGSize(width: 0, height: 1)
-            message_cell.layer.shadowRadius              = 6.0
-            message_cell.layer.shadowOpacity             = 1.0
-            message_cell.layer.masksToBounds             = false
-            message_cell.layer.shadowPath                = UIBezierPath(roundedRect: message_cell.bounds, cornerRadius: message_cell.contentView.layer.cornerRadius).cgPath
+            message_cell.layer.shadowColor   = UIColor.gray.cgColor
+            message_cell.layer.shadowOffset  = CGSize(width: 0, height: 1)
+            message_cell.layer.shadowRadius  = 6.0
+            message_cell.layer.shadowOpacity = 1.0
+            message_cell.layer.masksToBounds = false
+            message_cell.layer.shadowPath    = UIBezierPath(roundedRect: message_cell.bounds, cornerRadius: message_cell.contentView.layer.cornerRadius).cgPath
             
             return message_cell
             
@@ -125,12 +134,12 @@ class Main_card: UIViewController,UICollectionViewDelegate,UICollectionViewDataS
             game_cell.contentView.layer.borderWidth   = 1.0
             game_cell.contentView.layer.borderColor   = UIColor.clear.cgColor
             game_cell.contentView.layer.masksToBounds = false
-            game_cell.layer.shadowColor               = UIColor.gray.cgColor
-            game_cell.layer.shadowOffset              = CGSize(width: 0, height: 1)
-            game_cell.layer.shadowRadius              = 4.0
-            game_cell.layer.shadowOpacity             = 1.0
-            game_cell.layer.masksToBounds             = false
-            game_cell.layer.shadowPath                = UIBezierPath(roundedRect: game_cell.bounds, cornerRadius: game_cell.contentView.layer.cornerRadius).cgPath
+            game_cell.layer.shadowColor   = UIColor.gray.cgColor
+            game_cell.layer.shadowOffset  = CGSize(width: 0, height: 1)
+            game_cell.layer.shadowRadius  = 4.0
+            game_cell.layer.shadowOpacity = 1.0
+            game_cell.layer.masksToBounds = false
+            game_cell.layer.shadowPath    = UIBezierPath(roundedRect: game_cell.bounds, cornerRadius: game_cell.contentView.layer.cornerRadius).cgPath
             
             return game_cell
         }

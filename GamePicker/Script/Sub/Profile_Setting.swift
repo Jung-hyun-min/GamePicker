@@ -21,12 +21,12 @@ class Profile_Setting: UIViewController,UIImagePickerControllerDelegate,UINaviga
     override func viewWillAppear(_ animated: Bool) { registerForKeyboardNotifications() }
     override func viewWillDisappear(_ animated: Bool) { unregisterForKeyboardNotifications() }
     func registerForKeyboardNotifications() {
-        NotificationCenter.default.addObserver(self, selector:#selector(keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
-        NotificationCenter.default.addObserver(self, selector:#selector(keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+        NotificationCenter.default.addObserver(self, selector:#selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector:#selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     func unregisterForKeyboardNotifications() {
-        NotificationCenter.default.removeObserver(self, name:NSNotification.Name.UIKeyboardWillShow, object: nil)
-        NotificationCenter.default.removeObserver(self, name:NSNotification.Name.UIKeyboardWillHide, object: nil)
+        NotificationCenter.default.removeObserver(self, name:UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name:UIResponder.keyboardWillHideNotification, object: nil)
     }
     
     override func viewDidLoad() {
@@ -39,12 +39,12 @@ class Profile_Setting: UIViewController,UIImagePickerControllerDelegate,UINaviga
         Profile_image.layer.cornerRadius  = Profile_image.frame.size.height/2
         Profile_image.layer.borderWidth   = 3
         Profile_image.layer.borderColor   = UIColor.white.cgColor
-        Profile_image.clipsToBounds       = true;
-        Back_image.layer.masksToBounds    = false
-        Back_image.layer.shadowOpacity    = 0.5
-        Back_image.layer.shadowRadius     = 15
-        Back_image.layer.shadowColor      = UIColor.red.cgColor
-        Back_image.layer.shadowOffset     = CGSize.init(width: 0, height: 8)
+        Profile_image.clipsToBounds       = true
+        Back_image.layer.masksToBounds = false
+        Back_image.layer.shadowOpacity = 0.5
+        Back_image.layer.shadowRadius  = 15
+        Back_image.layer.shadowColor   = UIColor.red.cgColor
+        Back_image.layer.shadowOffset  = CGSize.init(width: 0, height: 8)
         
         User_intro.borderStyle         = .none
         User_intro.backgroundColor     = UIColor.white
@@ -57,20 +57,20 @@ class Profile_Setting: UIViewController,UIImagePickerControllerDelegate,UINaviga
         User_intro.layer.shadowColor   = UIColor.lightGray.cgColor
         var paddingView : UIView       = UIView(frame: CGRect(x: 0, y: 0, width: 20, height: User_intro.frame.height))
         User_intro.leftView            = paddingView
-        User_intro.leftViewMode        = UITextFieldViewMode.always
+        User_intro.leftViewMode        = UITextField.ViewMode.always
 
-        User_name.borderStyle          = .none
-        User_name.backgroundColor      = UIColor.white
-        User_name.layer.cornerRadius   = User_name.frame.size.height / 2
-        User_name.layer.borderWidth    = 0.25
-        User_name.layer.borderColor    = UIColor.white.cgColor
-        User_name.layer.shadowOpacity  = 1
-        User_name.layer.shadowRadius   = 3.0
-        User_name.layer.shadowOffset   = CGSize.zero
-        User_name.layer.shadowColor    = UIColor.lightGray.cgColor
-        paddingView                    = UIView(frame: CGRect(x: 0, y: 0, width: 20, height: User_name.frame.height))
-        User_name.leftView             = paddingView
-        User_name.leftViewMode         = UITextFieldViewMode.always
+        User_name.borderStyle         = .none
+        User_name.backgroundColor     = UIColor.white
+        User_name.layer.cornerRadius  = User_name.frame.size.height / 2
+        User_name.layer.borderWidth   = 0.25
+        User_name.layer.borderColor   = UIColor.white.cgColor
+        User_name.layer.shadowOpacity = 1
+        User_name.layer.shadowRadius  = 3.0
+        User_name.layer.shadowOffset  = CGSize.zero
+        User_name.layer.shadowColor   = UIColor.lightGray.cgColor
+        paddingView                   = UIView(frame: CGRect(x: 0, y: 0, width: 20, height: User_name.frame.height))
+        User_name.leftView            = paddingView
+        User_name.leftViewMode        = UITextField.ViewMode.always
         
         // 초기 텍스트 설정
         name_limit.text  = "\(User_name.text?.count ?? 0) / 10"
@@ -126,7 +126,7 @@ class Profile_Setting: UIViewController,UIImagePickerControllerDelegate,UINaviga
     }
     // 키보드 화면 올리기 내리기
     @objc func keyboardWillShow(note: NSNotification) {
-        if let keyboardSize = (note.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
+        if let keyboardSize = (note.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
             if keyboardSize.height == 0.0 || keyboardShown == true { return }
             UIView.animate(withDuration: 0.33, animations: {
                 if self.originY == nil { self.originY = self.view.frame.origin.y }
@@ -153,9 +153,11 @@ class Profile_Setting: UIViewController,UIImagePickerControllerDelegate,UINaviga
             if textField.text != "" {
                 self.User_data.set(textField.text, forKey: "User_name")
                 User_name.placeholder = User_data.string(forKey: "User_name")
+                
                 let changeRequest = Auth.auth().currentUser?.createProfileChangeRequest() // firebase 전송
                 changeRequest?.displayName = textField.text
                 changeRequest?.commitChanges { (error) in }
+                
             } else {
                 textField.text = User_data.string(forKey: "User_name")
                 text_alert()
@@ -271,10 +273,13 @@ class Profile_Setting: UIViewController,UIImagePickerControllerDelegate,UINaviga
         self.present(picker, animated: true)
     }
     
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) { // 사진변경 함수
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+// Local variable inserted by Swift 4.2 migrator.
+let info = convertFromUIImagePickerControllerInfoKeyDictionary(info)
+ // 사진변경 함수
             picker.dismiss(animated: true){() in
-            let img = info[UIImagePickerControllerEditedImage] as? UIImage
-            let img_data : NSData = UIImagePNGRepresentation(img!)! as NSData
+            let img = info[convertFromUIImagePickerControllerInfoKey(UIImagePickerController.InfoKey.editedImage)] as? UIImage
+            let img_data : NSData = img!.pngData()! as NSData
             if self.picture == 1 {
                 self.Back_image.image = img
                 self.User_data.set(img_data, forKey: "User_back_picture")
@@ -285,4 +290,14 @@ class Profile_Setting: UIViewController,UIImagePickerControllerDelegate,UINaviga
             self.User_data.synchronize()
         }
     }
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertFromUIImagePickerControllerInfoKeyDictionary(_ input: [UIImagePickerController.InfoKey: Any]) -> [String: Any] {
+	return Dictionary(uniqueKeysWithValues: input.map {key, value in (key.rawValue, value)})
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertFromUIImagePickerControllerInfoKey(_ input: UIImagePickerController.InfoKey) -> String {
+	return input.rawValue
 }

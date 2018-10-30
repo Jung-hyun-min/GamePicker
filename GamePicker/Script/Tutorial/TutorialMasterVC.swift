@@ -31,9 +31,9 @@ class TutorialMasterVC: UIViewController, UIPageViewControllerDataSource {
     self.pageVC.view.frame.size.height = self.view.frame.height - 45
     
     // 페이지 뷰 컨트롤러를 마스터 뷰 컨트롤러의 자식 뷰 컨트롤러로 설정
-    self.addChildViewController(self.pageVC)
+    self.addChild(self.pageVC)
     self.view.addSubview(self.pageVC.view)
-    self.pageVC.didMove(toParentViewController: self)
+    self.pageVC.didMove(toParent: self)
   }
   
   func getContentVC(atIndex idx: Int) -> UIViewController? {

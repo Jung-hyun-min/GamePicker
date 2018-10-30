@@ -15,7 +15,7 @@ class LogOut: UIViewController,FBSDKLoginButtonDelegate {
         
         // 높이 잠금 해제
         for const in Face.constraints{
-            if const.firstAttribute == NSLayoutAttribute.height && const.constant == 28{
+            if const.firstAttribute == NSLayoutConstraint.Attribute.height && const.constant == 28{
                 Face.removeConstraint(const)
             }
         }
@@ -43,12 +43,6 @@ class LogOut: UIViewController,FBSDKLoginButtonDelegate {
             
             self.view.window?.rootViewController?.dismiss(animated: true, completion: nil)
         }
-        // ====================================================
-        //FBSDKProfile.loadCurrentProfile { (profile, error) in
-        //    self.User_data.set(profile?.name, forKey: "User_name")
-        //    self.User_data.synchronize()
-        //}  페이스북 프로필 정보
-        // ====================================================
     }
     
     func loginButtonDidLogOut(_ loginButton: FBSDKLoginButton!) {

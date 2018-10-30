@@ -36,8 +36,8 @@ class Com_card: UIViewController,UICollectionViewDelegate,UICollectionViewDataSo
         // 스와이프 제스쳐 추가
         let swipeRight = UISwipeGestureRecognizer(target: self, action:  #selector(swiped))
         let swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(swiped))
-        swipeRight.direction = UISwipeGestureRecognizerDirection.right
-        swipeLeft.direction = UISwipeGestureRecognizerDirection.left
+        swipeRight.direction = UISwipeGestureRecognizer.Direction.right
+        swipeLeft.direction = UISwipeGestureRecognizer.Direction.left
         self.view.addGestureRecognizer(swipeRight)
         self.view.addGestureRecognizer(swipeLeft)
         
@@ -73,7 +73,7 @@ class Com_card: UIViewController,UICollectionViewDelegate,UICollectionViewDataSo
             
             message_cell.message_title.text = "질문을 할까요?"
             message_cell.message_text.text = "안녕하십니까?"
-            message_cell.message_confirm.text = "설정하러 가기!"
+            message_cell.message_confirm.setTitle("설정하러 가기!", for: .normal)
             
             // 여기는 카드뷰로 만드는 영역
             message_cell.contentView.layer.cornerRadius = 4.0

@@ -1,7 +1,7 @@
 import UIKit
 import Firebase
 
-class GP_Login1: UIViewController {
+class GP_Login1: UIViewController,UITextFieldDelegate {
     
     @IBOutlet var email_textfield: UITextField!
     @IBOutlet var password_textfield: UITextField!

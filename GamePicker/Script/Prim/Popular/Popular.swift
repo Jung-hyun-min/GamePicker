@@ -1,10 +1,10 @@
 import UIKit
 
 class Popular: UIViewController {
-    @IBOutlet var popular_online: UIImageView!
-    @IBOutlet var top_rating: UIImageView!
-    @IBOutlet var popular_mobile: UIImageView!
-    @IBOutlet var search: UIImageView!
+    @IBOutlet var popular_online: UIButton!
+    @IBOutlet var top_rating: UIButton!
+    @IBOutlet var popular_mobile: UIButton!
+    @IBOutlet var search: UIButton!
     
     var flag = Int()
     
@@ -25,22 +25,29 @@ class Popular: UIViewController {
         // 스와이프 제스쳐 추가
         let swipeRight = UISwipeGestureRecognizer(target: self, action:  #selector(swiped))
         let swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(swiped))
-        swipeRight.direction = UISwipeGestureRecognizerDirection.right
-        swipeLeft.direction = UISwipeGestureRecognizerDirection.left
+        swipeRight.direction = UISwipeGestureRecognizer.Direction.right
+        swipeLeft.direction = UISwipeGestureRecognizer.Direction.left
         self.view.addGestureRecognizer(swipeRight)
         self.view.addGestureRecognizer(swipeLeft)
     }
     
-    @IBAction func first(_ sender: Any) { flag = 1
+    @IBAction func first(_ sender: Any) {
+        flag = 1
         self.performSegue(withIdentifier: "game_list", sender: self)
     }
-    @IBAction func second(_ sender: Any) { flag = 2
+    
+    @IBAction func second(_ sender: Any) {
+        flag = 2
         self.performSegue(withIdentifier: "game_list", sender: self)
     }
-    @IBAction func third(_ sender: Any) { flag = 3
+    
+    @IBAction func third(_ sender: Any) {
+        flag = 3
         self.performSegue(withIdentifier: "game_list", sender: self)
     }
-    @IBAction func fourth(_ sender: Any) { flag = 4
+    
+    @IBAction func fourth(_ sender: Any) {
+        flag = 4
         self.performSegue(withIdentifier: "game_list", sender: self)
     }
     

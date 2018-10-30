@@ -14,52 +14,31 @@ class Com_table: UIViewController,UITableViewDataSource,UITableViewDelegate {
     @IBOutlet var refresh_but: UIBarButtonItem!
     
     var flag : Int = 0
-    var mTimer : Timer?
-    var time_second : Int = 0
     
     var array = ["게시판","테스트","셀"]
     
+    // 스와이프 리프레시
     lazy var refreshControl : UIRefreshControl = { // 새로고침
         let refreshControl = UIRefreshControl()
         refreshControl.addTarget(self, action: #selector(self.actualizerData(_:)), for: .valueChanged)
         refreshControl.tintColor = UIColor.red
         return refreshControl
     }()
-    
     @objc func actualizerData(_ refreshControl : UIRefreshControl){
         refresh()
         refreshControl.endRefreshing()
     }
-    
+    // 네비게이션 바 새로고침
     @IBAction func refresh_bar(_ sender: Any) {
-        refresh_but.isEnabled = false
-        if let timer = mTimer {
-            if !timer.isValid {
-                mTimer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(timerCallback), userInfo: nil, repeats: true)
-            }
-        }else{
-            mTimer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(timerCallback), userInfo: nil, repeats: true)
-        }
         refresh()
     }
-    @objc func timerCallback(){
-        time_second += 1
-        if time_second == 3 {
-            if let timer = mTimer {
-                if(timer.isValid){
-                    refresh_but.isEnabled = true
-                    timer.invalidate()
-                }
-            }
-            time_second = 0
-        }
-    }
     
+    // 새로고침 실행
     func refresh() {
         let title = "새로고침 테스트"
         array.append(title)
         self.table.reloadData()
-    } // 새로 고침의 실질적 코드
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
