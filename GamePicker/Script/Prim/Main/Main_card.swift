@@ -8,18 +8,6 @@ class Main_card: UIViewController,UICollectionViewDelegate,UICollectionViewDataS
     
     let User_data = UserDefaults.standard
     
-    @objc  func swiped(_ gesture: UISwipeGestureRecognizer) { // 스와이프
-        if gesture.direction == .left {
-            if (self.tabBarController?.selectedIndex)! < 3 {
-                self.tabBarController?.selectedIndex += 1
-            }
-        } else if gesture.direction == .right {
-            if (self.tabBarController?.selectedIndex)! > 0 {
-                self.tabBarController?.selectedIndex -= 1
-            }
-        }
-    }
-    
     lazy var refreshControl : UIRefreshControl = { // 새로고침
         let refreshControl = UIRefreshControl()
         refreshControl.addTarget(self, action: #selector(self.actualizerData(_:)), for: .valueChanged)
@@ -54,14 +42,6 @@ class Main_card: UIViewController,UICollectionViewDelegate,UICollectionViewDataS
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        // 스와이프 제스쳐 추가
-        let swipeRight = UISwipeGestureRecognizer(target: self, action:  #selector(swiped))
-        let swipeLeft  = UISwipeGestureRecognizer(target: self, action: #selector(swiped))
-        swipeRight.direction = UISwipeGestureRecognizer.Direction.right
-        swipeLeft.direction  = UISwipeGestureRecognizer.Direction.left
-        self.view.addGestureRecognizer(swipeRight)
-        self.view.addGestureRecognizer(swipeLeft)
 
         self.CardView.addSubview(self.refreshControl)
     }
@@ -78,7 +58,7 @@ class Main_card: UIViewController,UICollectionViewDelegate,UICollectionViewDataS
             let vc = self.instanceTutorialVC(name: "MasterVC")
             self.present(vc!, animated: true)
         } else if Auth.auth().currentUser == nil {
-            guard let login = self.storyboard?.instantiateViewController(withIdentifier: "Login") else {return}
+            guard let login = self.storyboard?.instantiateViewController(withIdentifier: "select") else { return }
             self.present(login, animated: true)
         }
     }
@@ -90,8 +70,15 @@ class Main_card: UIViewController,UICollectionViewDelegate,UICollectionViewDataS
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int { // 섹션별 셀 수
-        if section == 0 { return 1 }
-        else { return 4 }
+        if section == 0 { // 메세지 섹션
+            return 1
+        }
+        if section == 1 { // 게임 추천 섹션
+            return 4
+        }
+        else {
+            return 0
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize{ // 섹션별 셀 높이

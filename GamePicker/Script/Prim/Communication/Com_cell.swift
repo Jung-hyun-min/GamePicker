@@ -26,6 +26,4 @@ class Com_cell: UICollectionViewCell {
     @IBOutlet var third_image: UIImageView!
     @IBOutlet var fourth_image: UIImageView!
     
-    
-    
 }

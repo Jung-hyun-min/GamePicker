@@ -1,6 +1,6 @@
 import UIKit
 
-class AnimUtils: NSObject,UITabBarControllerDelegate {
+class Anim_utils: NSObject,UITabBarControllerDelegate {
     func tabBarController(_ tabBarController: UITabBarController, animationControllerForTransitionFrom fromVC: UIViewController, to toVC: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         return ScrollingAnim(tabBarController : tabBarController)
     }

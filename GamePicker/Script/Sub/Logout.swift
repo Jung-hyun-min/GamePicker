@@ -8,11 +8,13 @@ class LogOut: UIViewController,FBSDKLoginButtonDelegate {
     
     let User_data = UserDefaults.standard
     
+    let AD = UIApplication.shared.delegate as? AppDelegate
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+
         Create.layer.cornerRadius = 4
         Face.layer.cornerRadius   = 4
-        
         // 높이 잠금 해제
         for const in Face.constraints{
             if const.firstAttribute == NSLayoutConstraint.Attribute.height && const.constant == 28{
@@ -26,6 +28,16 @@ class LogOut: UIViewController,FBSDKLoginButtonDelegate {
         Face.titleLabel?.font = UIFont.systemFont(ofSize: 16)
         Face.backgroundColor  = UIColor.black
     }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        // 회원가입 직후 바로 로그인 화면 전환
+        if AD?.check == 1 {
+            AD?.check = 0
+            self.performSegue(withIdentifier: "Login", sender: self)
+        }
+    }
+    
+    
 
     func loginButton(_ loginButton: FBSDKLoginButton!, didCompleteWith result: FBSDKLoginManagerLoginResult?, error: Error!) {
         if (result?.token == nil) { return }

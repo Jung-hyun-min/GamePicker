@@ -13,31 +13,10 @@ class Setting: UIViewController {
     
     let User_data = UserDefaults.standard
     
-    @objc  func swiped(_ gesture: UISwipeGestureRecognizer) {
-        if gesture.direction == .left {
-            if (self.tabBarController?.selectedIndex)! < 3 {
-                self.tabBarController?.selectedIndex += 1
-            }
-        } else if gesture.direction == .right {
-            if (self.tabBarController?.selectedIndex)! > 0 {
-                self.tabBarController?.selectedIndex -= 1
-            }
-        }
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         //동기화
         Profile_chk()
-        
-        // 스와이프 제스쳐 추가
-        let swipeRight = UISwipeGestureRecognizer(target: self, action:  #selector(swiped))
-        let swipeLeft  = UISwipeGestureRecognizer(target: self, action: #selector(swiped))
-        swipeRight.direction = UISwipeGestureRecognizer.Direction.right
-        swipeLeft.direction  = UISwipeGestureRecognizer.Direction.left
-        self.view.addGestureRecognizer(swipeRight)
-        self.view.addGestureRecognizer(swipeLeft)
         
         Profile_image.layer.masksToBounds = true
         Profile_image.layer.cornerRadius  = Profile_image.frame.size.height/2;
@@ -48,13 +27,17 @@ class Setting: UIViewController {
         
         let tapGesture_back  = UITapGestureRecognizer(target: self, action: #selector(self.Edit))
         let tapGesture_front = UITapGestureRecognizer(target: self, action: #selector(self.Edit))
+        
         Back_image.addGestureRecognizer(tapGesture_back)
         Profile_image.addGestureRecognizer(tapGesture_front)
         Back_image.isUserInteractionEnabled = true
         Profile_image.isUserInteractionEnabled = true
     }
     
-    override func viewDidAppear(_ animated: Bool) { Profile_chk() } // Apper 프로필 체크
+    // Apper 프로필 체크
+    override func viewDidAppear(_ animated: Bool) {
+        Profile_chk()
+    }
     
     func Profile_chk() { // 화면에 프로필 표시
         if let name = User_data.string(forKey: "User_name") { // 이름

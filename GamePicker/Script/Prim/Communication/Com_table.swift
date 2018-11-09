@@ -24,10 +24,12 @@ class Com_table: UIViewController,UITableViewDataSource,UITableViewDelegate {
         refreshControl.tintColor = UIColor.red
         return refreshControl
     }()
+    
     @objc func actualizerData(_ refreshControl : UIRefreshControl){
         refresh()
         refreshControl.endRefreshing()
     }
+    
     // 네비게이션 바 새로고침
     @IBAction func refresh_bar(_ sender: Any) {
         refresh()
@@ -60,6 +62,10 @@ class Com_table: UIViewController,UITableViewDataSource,UITableViewDelegate {
         cell.content_prev.text = array[indexPath.row]
         
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        print("\(indexPath.row)")
     }
 
 

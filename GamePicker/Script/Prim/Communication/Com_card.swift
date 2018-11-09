@@ -4,19 +4,6 @@ import UIKit
 class Com_card: UIViewController,UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout {
 
     @IBOutlet var CardView: UICollectionView!
-    var which_com:Int = 0
-    
-    @objc  func swiped(_ gesture: UISwipeGestureRecognizer) { // 스와이프
-        if gesture.direction == .left {
-            if (self.tabBarController?.selectedIndex)! < 3 {
-                self.tabBarController?.selectedIndex += 1
-            }
-        } else if gesture.direction == .right {
-            if (self.tabBarController?.selectedIndex)! > 0 {
-                self.tabBarController?.selectedIndex -= 1
-            }
-        }
-    }
     
     lazy var refreshControl : UIRefreshControl = { // 새로고침
         let refreshControl = UIRefreshControl()
@@ -25,7 +12,7 @@ class Com_card: UIViewController,UICollectionViewDelegate,UICollectionViewDataSo
         return refreshControl
     }()
     
-    @objc func actualizerData(_ refreshControl : UIRefreshControl){ // 새로고침 실행 함수
+    @objc func actualizerData(_ refreshControl : UIRefreshControl){  // 새로고침 실행 함수
         // 여기에 실행할것 입력 새로고침시;
         self.CardView.reloadData()
         refreshControl.endRefreshing()
@@ -33,19 +20,8 @@ class Com_card: UIViewController,UICollectionViewDelegate,UICollectionViewDataSo
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // 스와이프 제스쳐 추가
-        let swipeRight = UISwipeGestureRecognizer(target: self, action:  #selector(swiped))
-        let swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(swiped))
-        swipeRight.direction = UISwipeGestureRecognizer.Direction.right
-        swipeLeft.direction = UISwipeGestureRecognizer.Direction.left
-        self.view.addGestureRecognizer(swipeRight)
-        self.view.addGestureRecognizer(swipeLeft)
         
         self.CardView.addSubview(self.refreshControl)
-        
-        let left_but = UIButton.init(frame: CGRect.init(x: 0, y: 0, width: 30, height: 30))
-        left_but.setImage(UIImage.init(named:"icon_white"), for: .normal)
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem.init(customView: left_but)
     }
     
     func numberOfSections(in collectionView: UICollectionView) -> Int { // 섹션 개수
@@ -53,8 +29,12 @@ class Com_card: UIViewController,UICollectionViewDelegate,UICollectionViewDataSo
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if section == 0 { return 1 }
-        else { return 4 }
+        if section == 0 {
+            return 1
+        }
+        else {
+            return 4
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize{
@@ -88,7 +68,6 @@ class Com_card: UIViewController,UICollectionViewDelegate,UICollectionViewDataSo
             message_cell.layer.shadowPath = UIBezierPath(roundedRect: message_cell.bounds, cornerRadius: message_cell.contentView.layer.cornerRadius).cgPath
             
             return message_cell
-            
         } else { // 게임 카드
             let com_cell = collectionView.dequeueReusableCell(withReuseIdentifier: "com_card", for: indexPath) as! Com_cell
             
@@ -132,14 +111,13 @@ class Com_card: UIViewController,UICollectionViewDelegate,UICollectionViewDataSo
         }
     }
 
-    @objc func more_but(sender: UIButton){
-        which_com = sender.tag
-        self.performSegue(withIdentifier: "com_list", sender: self)
+    @objc func more_but(sender: UIButton) {
+        self.performSegue(withIdentifier: "com_list", sender: sender.tag)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         let param = segue.destination as! Com_table
-        param.flag = which_com
+        param.flag = sender as! Int
     }
 
 }

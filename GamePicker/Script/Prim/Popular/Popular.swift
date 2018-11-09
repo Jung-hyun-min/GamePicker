@@ -8,27 +8,9 @@ class Popular: UIViewController {
     
     var flag = Int()
     
-    @objc  func swiped(_ gesture: UISwipeGestureRecognizer) { // 탭바 스와이프 제스쳐
-        if gesture.direction == .left {
-            if (self.tabBarController?.selectedIndex)! < 3 {
-                self.tabBarController?.selectedIndex += 1
-            }
-        } else if gesture.direction == .right {
-            if (self.tabBarController?.selectedIndex)! > 0 {
-                self.tabBarController?.selectedIndex -= 1
-            }
-        }
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         // 스와이프 제스쳐 추가
-        let swipeRight = UISwipeGestureRecognizer(target: self, action:  #selector(swiped))
-        let swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(swiped))
-        swipeRight.direction = UISwipeGestureRecognizer.Direction.right
-        swipeLeft.direction = UISwipeGestureRecognizer.Direction.left
-        self.view.addGestureRecognizer(swipeRight)
-        self.view.addGestureRecognizer(swipeLeft)
     }
     
     @IBAction func first(_ sender: Any) {

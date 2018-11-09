@@ -12,5 +12,4 @@ class Com_table_cell: UITableViewCell {
 
     @IBOutlet var content_prev: UILabel!
     
-
 }

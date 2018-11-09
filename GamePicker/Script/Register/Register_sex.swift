@@ -25,7 +25,7 @@ class Register_sex: UIViewController {
     @IBAction func undo(_ sender: Any) {
         let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         let cancel = UIAlertAction(title: "계속", style: .cancel)
-        let ok = UIAlertAction(title: "성별 입력 취소", style: .default) {
+        let ok = UIAlertAction(title: "이름 다시입력", style: .default) {
             (result:UIAlertAction) -> Void in
             self.navigationController?.popViewController(animated: true)
         }
@@ -41,9 +41,9 @@ class Register_sex: UIViewController {
     
     @IBAction func next_but_a(_ sender: Any) {
         if sex.selectedSegmentIndex == 0 {
-            User?.sex = "M"
+            User?.sex = 1//M
         } else {
-            User?.sex = "W"
+            User?.sex = 2//W
         }
         performSegue(withIdentifier: "adress", sender: self)
     }
