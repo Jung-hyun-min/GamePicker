@@ -8,11 +8,10 @@ class TutorialMasterVC: UIViewController, UIPageViewControllerDataSource {
   var contentImages = ["page1", "page2", "page3", "page4"]
   
   @IBAction func close(_ sender: Any) {
-    let ud = UserDefaults.standard
-    ud.set(true, forKey: "tutorial")
-    ud.synchronize()
+    UserDefaults.standard.set(true, forKey: "tutorial")
+    UserDefaults.standard.synchronize()
 
-    let vc = self.instanceMainVC(name: "Login")
+    let vc = self.instanceMainVC(name: "select")
     self.present(vc!, animated: true)
   }
   

@@ -20,7 +20,8 @@ class GP_Login1: UIViewController,UITextFieldDelegate {
         email_textfield.borderStyle = .none
         let border1 = CALayer()
         border1.frame = CGRect(x: 0, y: email_textfield.frame.size.height-1, width: UIScreen.main.bounds.size.width - 120, height: 3)
-        border1.backgroundColor = UIColor.red.cgColor
+        border1.backgroundColor = UIColor.darkGray.cgColor
+        
         email_textfield.layer.addSublayer((border1))
         email_textfield.textAlignment = .center
         email_textfield.textColor     = UIColor.black
@@ -29,7 +30,7 @@ class GP_Login1: UIViewController,UITextFieldDelegate {
         password_textfield.borderStyle = .none
         let border2 = CALayer()
         border2.frame = CGRect(x: 0, y: password_textfield.frame.size.height-1, width: UIScreen.main.bounds.size.width - 120, height: 3)
-        border2.backgroundColor = UIColor.red.cgColor
+        border2.backgroundColor = UIColor.darkGray.cgColor
         password_textfield.layer.addSublayer((border2))
         password_textfield.textAlignment = .center
         password_textfield.textColor     = UIColor.black

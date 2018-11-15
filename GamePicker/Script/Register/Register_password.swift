@@ -31,7 +31,7 @@ class Register_password: UIViewController {
     @IBAction func undo(_ sender: Any) {
         let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         let cancel = UIAlertAction(title: "계속", style: .cancel)
-        let ok = UIAlertAction(title: "비밀번호 입력 취소", style: .default) {
+        let ok = UIAlertAction(title: "이메일 다시입력", style: .default) {
             (result:UIAlertAction) -> Void in
             self.navigationController?.popViewController(animated: true)
         }

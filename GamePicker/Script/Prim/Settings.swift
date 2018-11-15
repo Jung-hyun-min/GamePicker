@@ -3,7 +3,6 @@ import Firebase
 import FBSDKCoreKit
 
 class Setting: UIViewController {
-    
     @IBOutlet var Profile_image: UIImageView! // 프로필 사진
     @IBOutlet var Back_image: UIImageView!    // 배경사진
     @IBOutlet var User_name: UILabel!         // 이름
@@ -25,9 +24,10 @@ class Setting: UIViewController {
         Back_image.layer.cornerRadius  = 5
         Back_image.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
         
+        
+        // 이미지 탭제스쳐 추가
         let tapGesture_back  = UITapGestureRecognizer(target: self, action: #selector(self.Edit))
         let tapGesture_front = UITapGestureRecognizer(target: self, action: #selector(self.Edit))
-        
         Back_image.addGestureRecognizer(tapGesture_back)
         Profile_image.addGestureRecognizer(tapGesture_front)
         Back_image.isUserInteractionEnabled = true
@@ -36,7 +36,9 @@ class Setting: UIViewController {
     
     // Apper 프로필 체크
     override func viewDidAppear(_ animated: Bool) {
-        Profile_chk()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2, execute: {
+            self.Profile_chk()
+        })
     }
     
     func Profile_chk() { // 화면에 프로필 표시
@@ -45,7 +47,7 @@ class Setting: UIViewController {
         } else {
             User_name.text = "닉네임"
         }
-        if let intro = User_data.string(forKey: "User_intro") { // 소개
+        if let intro = User_data.string(forKey: "User_introduce") { // 소개
             if intro == "" {
                 User_intro.text = "한줄소개를 입력해 주세요."
             } else {
@@ -54,6 +56,7 @@ class Setting: UIViewController {
         } else {
             User_intro.text = "한줄소개를 입력해 주세요."
         }
+        
         if let front_image = User_data.object(forKey: "User_front_picture") { // 프사
             Profile_image.image = UIImage(data: front_image as! Data)
         } else {
@@ -78,12 +81,15 @@ class Setting: UIViewController {
         self.present(alert,animated: true)
     }
     
-    @IBAction func logout(_ sender: Any) { // 로그아웃 버튼
+    // 로그아웃 버튼
+    @IBAction func logout(_ sender: Any) {
         let alert = UIAlertController(title: "알림", message: "로그아웃 하시겠습니까?", preferredStyle: .actionSheet)
         let cancel = UIAlertAction(title: "취소", style: .cancel)
         let ok = UIAlertAction(title: "확인", style: .destructive) {
             (result:UIAlertAction) -> Void in
             do {
+                UserDefaults.standard.set(false, forKey: "login")
+                self.delete_userdata()
                 try Auth.auth().signOut()
                 self.performSegue(withIdentifier: "Logout", sender: self)
             }

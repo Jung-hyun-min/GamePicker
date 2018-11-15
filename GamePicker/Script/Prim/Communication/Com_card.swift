@@ -5,6 +5,8 @@ class Com_card: UIViewController,UICollectionViewDelegate,UICollectionViewDataSo
 
     @IBOutlet var CardView: UICollectionView!
     
+    let sort_array = ["전체 게시판","자유 게시판","짤방 게시판","질문 게시판"]
+    
     lazy var refreshControl : UIRefreshControl = { // 새로고침
         let refreshControl = UIRefreshControl()
         refreshControl.addTarget(self, action: #selector(self.actualizerData(_:)), for: .valueChanged)
@@ -12,7 +14,7 @@ class Com_card: UIViewController,UICollectionViewDelegate,UICollectionViewDataSo
         return refreshControl
     }()
     
-    @objc func actualizerData(_ refreshControl : UIRefreshControl){  // 새로고침 실행 함수
+    @objc func actualizerData(_ refreshControl : UIRefreshControl) {  // 새로고침 실행 함수
         // 여기에 실행할것 입력 새로고침시;
         self.CardView.reloadData()
         refreshControl.endRefreshing()
@@ -44,8 +46,6 @@ class Com_card: UIViewController,UICollectionViewDelegate,UICollectionViewDataSo
             return CGSize(width: view.frame.size.width - 30, height: 185)
         }
     }
-    
-    let sort_array = ["전체 게시판","자유 게시판","짤방 게시판","질문 게시판"]
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if indexPath.section == 0 { // 메세지 카드
@@ -112,12 +112,12 @@ class Com_card: UIViewController,UICollectionViewDelegate,UICollectionViewDataSo
     }
 
     @objc func more_but(sender: UIButton) {
-        self.performSegue(withIdentifier: "com_list", sender: sender.tag)
+        //self.performSegue(withIdentifier: "com_list", sender: sender.tag)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        let param = segue.destination as! Com_table
-        param.flag = sender as! Int
+        //let param = segue.destination as! Com_table
+        //param.flag = sender as! Int
     }
 
 }

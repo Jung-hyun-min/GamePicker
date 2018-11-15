@@ -36,8 +36,6 @@ class LogOut: UIViewController,FBSDKLoginButtonDelegate {
             self.performSegue(withIdentifier: "Login", sender: self)
         }
     }
-    
-    
 
     func loginButton(_ loginButton: FBSDKLoginButton!, didCompleteWith result: FBSDKLoginManagerLoginResult?, error: Error!) {
         if (result?.token == nil) { return }
@@ -48,10 +46,8 @@ class LogOut: UIViewController,FBSDKLoginButtonDelegate {
         Auth.auth().signInAndRetrieveData(with: credential) { (authResult, error) in
             if error != nil { return }
             FBSDKLoginManager().logOut();
-            let user = Auth.auth().currentUser
-            self.User_data.set(user?.displayName, forKey: "User_name")
-            self.User_data.set(user?.email, forKey: "User_email")
-            self.User_data.set(user?.uid, forKey: "User_uid")
+            
+            // API 동기화 작업 필요함...
             
             self.view.window?.rootViewController?.dismiss(animated: true, completion: nil)
         }

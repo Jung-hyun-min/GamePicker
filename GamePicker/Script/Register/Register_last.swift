@@ -12,6 +12,8 @@ class Register_last: UIViewController {
     let User_data = UserDefaults.standard
     let User = UIApplication.shared.delegate as? AppDelegate
     
+    let api = Api_url()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         warn.isHidden = true
@@ -23,18 +25,13 @@ class Register_last: UIViewController {
         Auth.auth().createUser(withEmail: (User?.email)!, password: (User?.password)!, completion: {(authResult, error) in
             if error != nil {
                 print(error!)
+                self.warn.isHidden = false
                 self.warn.text = "error"
-                print("error in create")
+                self.showalert(message: error?.localizedDescription ?? "", can: 0)
                 return
             }
             
             self.register() // 가입
-            self.register_plus() // 추가 가입
-            self.syncronize() // 동기화
-            //fb에 이름 설정
-            let changeRequest = Auth.auth().currentUser?.createProfileChangeRequest()
-            changeRequest?.displayName = self.User?.name
-            changeRequest?.commitChanges { (error) in }
  
             Auth.auth().currentUser?.sendEmailVerification( completion: { (error) in
                 if error != nil {
@@ -93,11 +90,12 @@ class Register_last: UIViewController {
             "password" : User?.password ?? "",
         ]
         
-        Alamofire.request("http://gamepicker-api.appspot.com/users", method: .post, parameters: parameters, encoding: JSONEncoding.default).responseJSON { response in
+        Alamofire.request(api.pre + "users", method: .post, parameters: parameters).responseJSON { response in
             if response.result.isSuccess {
                 print(response.result.value ?? "")
+                self.register_plus() // 추가 가입
             } else {
-                print("정보 실패")
+                self.showalert(message: "API Register ERROR", can: 0)
             }
             
         }
@@ -112,12 +110,12 @@ class Register_last: UIViewController {
             "introduce" : ""
             ]
         
-        Alamofire.request("http://gamepicker-api.appspot.com/users", method: .put, parameters: parameters, encoding: JSONEncoding.default).responseJSON { response in
+        Alamofire.request(api.pre + "users", method: .put, parameters: parameters).responseJSON { response in
             if response.result.isSuccess {
                 print(response.result.value ?? "")
-                
+                self.syncronize() // 동기화
             } else {
-                print("plus 정보 실패")
+                self.showalert(message: "API plus Register ERROR", can: 0)
             }
         }
     }
@@ -131,7 +129,6 @@ class Register_last: UIViewController {
         self.User_data.removeObject(forKey: "User_intro")
         self.User_data.removeObject(forKey: "User_back_picture")
         self.User_data.removeObject(forKey: "User_front_picture")
-        
         
     }
     

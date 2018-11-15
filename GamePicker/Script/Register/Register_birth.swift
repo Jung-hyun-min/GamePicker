@@ -37,9 +37,10 @@ class Register_birth: UIViewController {
         let dateformatter1 = DateFormatter()
         let dateformatter2 = DateFormatter()
         dateformatter1.dateFormat = "yyyy년 MM월 dd일 맞아요?"
-        dateformatter2.dateFormat = "yyyyMMdd"
+        dateformatter2.dateFormat = "yyyy-MM-dd"
         let alert_title : String = dateformatter1.string(from: birth_o.date)
         let birth : String = dateformatter2.string(from: birth_o.date)
+        print(birth)
         User?.birth = birth
         let alert = UIAlertController(title: alert_title, message: nil, preferredStyle: .alert)
         let cancel = UIAlertAction(title: "아니요", style: .cancel)

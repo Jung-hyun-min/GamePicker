@@ -24,28 +24,32 @@ class Game_search: UIViewController,UITableViewDelegate,UITableViewDataSource,UI
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        search_bar.isHidden = true
+        state.isHidden = true
+        
         // 서치바 색 변경
         let textFieldInsideSearchBar = search_bar.value(forKey: "searchField") as? UITextField
         textFieldInsideSearchBar?.textColor = UIColor.white
-    
+        
         // http get
-        getgames()
+        get_games()
     }
     
     // 네비게이션 아이템 새로고침
     @IBAction func refresh(_ sender: Any) {
+        self.search_bar.isHidden = true
         self.activity.startAnimating()
+        self.activity.isHidden = false
         state.text = "게임정보 동기화중.."
         all_game.removeAll()
         searched_game.removeAll()
-        getgames()
+        get_games()
     }
     
     // 게임데이터 get request
-    func getgames() {
+    func get_games() {
         // 액티비티 회전 시작
         activity.startAnimating()
-        search_table.isHidden = true // 테이블 뷰 가리기
         
         let url = api.pre + "games"
         
@@ -66,22 +70,24 @@ class Game_search: UIViewController,UITableViewDelegate,UITableViewDataSource,UI
                     }
                     self.searched_game = self.all_game
                     DispatchQueue.main.async(execute: {
-                        self.state.text = "검색어를 입력해주세요"
+                        self.state.isHidden = false
+                        self.search_bar.isHidden = false
+                        self.state.text = "검색어를 입력하세요"
                         self.activity.stopAnimating()
                         self.activity.isHidden = true
                     })
                 }
             } else {
-                self.showalert(message: "게임 데이터 API 오류")
+                self.showalert(message: "게임 데이터 API 오류", can: 0)
             }
         }
     }
-        
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if searched_game.count == 0 {
             tableView.isHidden = true
             if search_bar.text == "" {
-                state.text = "검색어를 입력하세요"
+                state.text = "공백 검색"
             } else {
                 state.text = "\"\(search_bar.text ?? "")\"(은)는 없습니다"
             }
@@ -99,33 +105,15 @@ class Game_search: UIViewController,UITableViewDelegate,UITableViewDataSource,UI
         
         cell.game_title?.text = row.title
         
-        DispatchQueue.main.async(execute: {
-            cell.game_image.image = self.getThumbnailImage(indexPath.row)
-        })
-        return cell
-    }
-    
-    func getThumbnailImage(_ index : Int) -> UIImage {
-        // 인자값으로 받은 인덱스를 기반으로 해당하는 배열 데이터를 읽어옴
-        let game = self.searched_game[index]
-        // 메모리제이션 처리 저장된 이미지가 있을 경우 이를 반환하고, 없을 경우 내려받아 저장한 후 반환함
-        let nullimage = UIImage(named: "noimage.jpg")
-        
-        let url: URL! = URL(string: game.thumbnail!)
-        
-        if url != nil {
-            let imageData = try! Data(contentsOf: url)
-            game.thumbnailImage = UIImage(data:imageData) // UIImage 객체를 생성하여 MovieVO 객체에 우선 저장함
-            if game.thumbnailImage != nil {
-                // 이미지 값이 비어있지 않고, 이미지 url이 유효할때
-                return game.thumbnailImage!
-            } else {
-                return nullimage!  // 저장된 이미지를 반환
+        if let url = URL(string :row.thumbnail ?? "") {
+            getData(from: url) { data, response, error in
+                guard let data = data, error == nil else { return }
+                DispatchQueue.main.async() {
+                    cell.game_image.image = UIImage(data: data)
+                }
             }
-        } else {
-            return nullimage!
         }
-        
+        return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -141,17 +129,6 @@ class Game_search: UIViewController,UITableViewDelegate,UITableViewDataSource,UI
         param.id = sender as! Int
     }
     
-    func showalert(message : String) {
-        let alert = UIAlertController(title: "알림", message: message, preferredStyle: .alert)
-        let ok = UIAlertAction(title: "확인", style: .default) {
-            (result:UIAlertAction) -> Void in
-            self.navigationController?.popViewController(animated: true)
-        }
-        alert.addAction(ok)
-        self.present(alert,animated: true)
-        return
-    }
-    
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         searched_game = all_game.filter({ game -> Bool in
             if search_bar.text == "" {
@@ -164,7 +141,8 @@ class Game_search: UIViewController,UITableViewDelegate,UITableViewDataSource,UI
             return false
         })
         search_table.reloadData()
-        
         searchBar.resignFirstResponder()
     }
+    
+    
 }

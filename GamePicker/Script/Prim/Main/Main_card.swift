@@ -1,13 +1,13 @@
 import UIKit
 import Firebase
-import AudioToolbox
 
 class Main_card: UIViewController,UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout {
-    
+    // 카드뷰
     @IBOutlet var CardView: UICollectionView!
     
+    // 유저데이터
     let User_data = UserDefaults.standard
-    
+
     lazy var refreshControl : UIRefreshControl = { // 새로고침
         let refreshControl = UIRefreshControl()
         refreshControl.addTarget(self, action: #selector(self.actualizerData(_:)), for: .valueChanged)
@@ -20,44 +20,18 @@ class Main_card: UIViewController,UICollectionViewDelegate,UICollectionViewDataS
         self.CardView.reloadData()
         refreshControl.endRefreshing()
     }
-    
-    func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
-        if (velocity.y > 0) {
-            UIView.animate(withDuration: 2.5, delay: 0, options: UIView.AnimationOptions(), animations: {
-                self.navigationController?.setNavigationBarHidden(true, animated: true)
-            }, completion: nil)
-        } else {
-            UIView.animate(withDuration: 2.5, delay: 0, options: UIView.AnimationOptions(), animations: {
-                self.navigationController?.setNavigationBarHidden(false, animated: true)
-            }, completion: nil)
-        }
-    } // 스크롤 상태바 제어
-    
-    @IBAction func search(_ sender: Any) {
-        AudioServicesPlaySystemSound(1520)
-    }
-    @IBAction func setting(_ sender: Any) {
-        AudioServicesPlaySystemSound(1519)
-    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         self.CardView.addSubview(self.refreshControl)
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        let User_data = UserDefaults.standard
-        // 유저 동기화
-        let user = Auth.auth().currentUser
-        self.User_data.set(user?.displayName, forKey: "User_name")
-        self.User_data.set(user?.email, forKey: "User_email")
-        self.User_data.set(user?.uid, forKey: "User_uid")
-        
-        if User_data.bool(forKey: "tutorial") == false {
+        if UserDefaults.standard.bool(forKey: "tutorial") == false {
             let vc = self.instanceTutorialVC(name: "MasterVC")
             self.present(vc!, animated: true)
-        } else if Auth.auth().currentUser == nil {
+        } else if UserDefaults.standard.bool(forKey: "login") == false {
             guard let login = self.storyboard?.instantiateViewController(withIdentifier: "select") else { return }
             self.present(login, animated: true)
         }
@@ -115,18 +89,6 @@ class Main_card: UIViewController,UICollectionViewDelegate,UICollectionViewDataS
             let game_cell = collectionView.dequeueReusableCell(withReuseIdentifier: "game_card", for: indexPath) as! Main_cell
             
             game_cell.game_name.text = game_title_array[indexPath.row]
-            
-            //사실 여기는 카드뷰로 만드는 영역임
-            game_cell.contentView.layer.cornerRadius  = 4.0
-            game_cell.contentView.layer.borderWidth   = 1.0
-            game_cell.contentView.layer.borderColor   = UIColor.clear.cgColor
-            game_cell.contentView.layer.masksToBounds = false
-            game_cell.layer.shadowColor   = UIColor.gray.cgColor
-            game_cell.layer.shadowOffset  = CGSize(width: 0, height: 1)
-            game_cell.layer.shadowRadius  = 4.0
-            game_cell.layer.shadowOpacity = 1.0
-            game_cell.layer.masksToBounds = false
-            game_cell.layer.shadowPath    = UIBezierPath(roundedRect: game_cell.bounds, cornerRadius: game_cell.contentView.layer.cornerRadius).cgPath
             
             return game_cell
         }
