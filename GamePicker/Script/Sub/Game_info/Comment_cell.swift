@@ -7,4 +7,7 @@ class Comment_cell: UITableViewCell {
     @IBOutlet var date: UILabel!
     @IBOutlet var more: UIButton!
     
+    @IBOutlet var like: UIButton!
+    @IBOutlet var dislike: UIButton!
+    
 }

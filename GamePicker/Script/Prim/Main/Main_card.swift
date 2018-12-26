@@ -1,12 +1,9 @@
 import UIKit
-import Firebase
 
 class Main_card: UIViewController,UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout {
-    // 카드뷰
     @IBOutlet var CardView: UICollectionView!
-    
-    // 유저데이터
     let User_data = UserDefaults.standard
+    
 
     lazy var refreshControl : UIRefreshControl = { // 새로고침
         let refreshControl = UIRefreshControl()
@@ -23,7 +20,7 @@ class Main_card: UIViewController,UICollectionViewDelegate,UICollectionViewDataS
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        navigation_icon()
         self.CardView.addSubview(self.refreshControl)
     }
     
@@ -37,8 +34,6 @@ class Main_card: UIViewController,UICollectionViewDelegate,UICollectionViewDataS
         }
     }
     
-    let game_title_array = ["first","second","third","fourth"]
-    
     func numberOfSections(in collectionView: UICollectionView) -> Int { // 섹션 개수
            return 2
     }
@@ -46,20 +41,16 @@ class Main_card: UIViewController,UICollectionViewDelegate,UICollectionViewDataS
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int { // 섹션별 셀 수
         if section == 0 { // 메세지 섹션
             return 1
-        }
-        if section == 1 { // 게임 추천 섹션
+        } else { // 게임 추천 섹션
             return 4
-        }
-        else {
-            return 0
         }
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize{ // 섹션별 셀 높이
         if indexPath.section == 0 {
-            return CGSize(width: view.frame.size.width - 30, height: 150)
+            return CGSize(width: view.frame.size.width - 40, height: 170)
         } else {
-            return CGSize(width: view.frame.size.width - 30, height: 380)
+            return CGSize(width: view.frame.size.width - 40, height: 380)
         }
     }
     
@@ -67,28 +58,28 @@ class Main_card: UIViewController,UICollectionViewDelegate,UICollectionViewDataS
         if indexPath.section == 0 { // 메세지 카드
             let message_cell = collectionView.dequeueReusableCell(withReuseIdentifier: "message_card", for: indexPath) as! Message_cell
             
-            message_cell.message_title.text   = "질문을 할까요?"
-            message_cell.message_text.text    = "안녕하십니까?"
-            message_cell.message_confirm.setTitle("설정하러 가기!", for: .normal)
+            message_cell.message_title.text   = "정현민님, 우울하신가요?"
+            message_cell.message_text.text    = "신규 출시 게임으로 잠시 달래봐요."
             
-            //사실 여기는 카드뷰로 만드는 영역임
-            message_cell.contentView.layer.cornerRadius  = 4.0
-            message_cell.contentView.layer.borderWidth   = 1.0
-            message_cell.contentView.layer.borderColor   = UIColor.clear.cgColor
-            message_cell.contentView.layer.masksToBounds = false
-            message_cell.layer.shadowColor   = UIColor.gray.cgColor
-            message_cell.layer.shadowOffset  = CGSize(width: 0, height: 1)
-            message_cell.layer.shadowRadius  = 6.0
-            message_cell.layer.shadowOpacity = 1.0
-            message_cell.layer.masksToBounds = false
-            message_cell.layer.shadowPath    = UIBezierPath(roundedRect: message_cell.bounds, cornerRadius: message_cell.contentView.layer.cornerRadius).cgPath
+            // 카드뷰
+            message_cell.layer.cornerRadius = 4.0
+            message_cell.layer.shadowColor = UIColor.black.cgColor
+            message_cell.layer.shadowOffset = CGSize(width: 0.0, height: 0.0)
+            message_cell.layer.shadowRadius = 12.0
+            message_cell.layer.shadowOpacity = 0.7
             
             return message_cell
             
         } else { // 게임 카드
             let game_cell = collectionView.dequeueReusableCell(withReuseIdentifier: "game_card", for: indexPath) as! Main_cell
             
-            game_cell.game_name.text = game_title_array[indexPath.row]
+            game_cell.game_name.text = "abc"
+            
+            game_cell.layer.cornerRadius = 4.0
+            game_cell.layer.shadowColor = UIColor.black.cgColor
+            game_cell.layer.shadowOffset = CGSize(width: 0.0, height: 0.0)
+            game_cell.layer.shadowRadius = 12.0
+            game_cell.layer.shadowOpacity = 0.7
             
             return game_cell
         }

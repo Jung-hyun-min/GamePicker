@@ -5,7 +5,10 @@ import youtube_ios_player_helper
 
 class Game_info: UIViewController,UITableViewDelegate,UITableViewDataSource,UITextFieldDelegate {
     @IBOutlet var table: UITableView!
+    
     @IBOutlet var activity: UIActivityIndicatorView!
+    @IBOutlet var Game_imgview: UIImageView!
+    @IBOutlet var Game_namelabel: UILabel!
     
     // 유저 디폴트 변수 선언 후 사용
     let User_data = UserDefaults.standard
@@ -26,10 +29,11 @@ class Game_info: UIViewController,UITableViewDelegate,UITableViewDataSource,UITe
     // 댓글 관련 변수
     var comment_number : Int = 0
     var comment_text : String = ""
-
+    // 게임 평가 점수
+    var rating : Double = 0
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         table.isHidden = true
         activity.startAnimating()
         // id = 0 일때 페이지 벗어나기
@@ -48,11 +52,10 @@ class Game_info: UIViewController,UITableViewDelegate,UITableViewDataSource,UITe
     // 섹션별 높이
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if indexPath.section == 0 { // info1
-            return 250
+            return 30
         }
         if indexPath.section == 1 { // info2
-            let height = CGFloat(80 + ((game_summary.count) / 30) * 20)
-            return height
+            return UITableView.automaticDimension
         }
         if indexPath.section == 2 { // 비디오
             let height = UIScreen.main.bounds.size.width*9/16
@@ -61,9 +64,7 @@ class Game_info: UIViewController,UITableViewDelegate,UITableViewDataSource,UITe
         if indexPath.section == 3 { // 댓글 작성
             return 95
         } else {
-            let row = comment[indexPath.row]
-            let height = CGFloat(70 + ((row.value?.count)! / 30) * 20)
-            return height
+            return UITableView.automaticDimension
         }
     }
 
@@ -105,9 +106,11 @@ class Game_info: UIViewController,UITableViewDelegate,UITableViewDataSource,UITe
             info1.commuity.addTarget(self, action: #selector(self.community), for: .touchUpInside)
             
             // 텍스트, 이미지 처리
-            info1.game_title.text = self.game_title
-            info1.game_rate.text = "평균 평점 : 0.99 (1명)"
+            
+            // info1.game_title.text = self.game_title
+            //info1.game_rate.text = "평균 평점 : 0.99 (1명)"
             // 이미지 비동기 처리
+            /*
             if let url = URL(string :game_image_url) {
                 getData(from: url) { data, response, error in
                     guard let data = data, error == nil else { return }
@@ -116,7 +119,7 @@ class Game_info: UIViewController,UITableViewDelegate,UITableViewDataSource,UITe
                     }
                 }
             }
-            
+ */
             return info1
         }
         // info2
@@ -139,7 +142,7 @@ class Game_info: UIViewController,UITableViewDelegate,UITableViewDataSource,UITe
             return video
         }
         // 댓글 작성
-        if indexPath.section == 3{
+        if indexPath.section == 3 {
             let write = tableView.dequeueReusableCell(withIdentifier: "comment_write", for: indexPath) as! Comment_write_cell
             comment_text = ""
             write.comment_num.text = "\(comment_number)"
@@ -157,10 +160,22 @@ class Game_info: UIViewController,UITableViewDelegate,UITableViewDataSource,UITe
             comment.date.text = row.update_date
             
             comment.more.tag = row.id ?? 0
-            comment.more.addTarget(self, action: #selector(self.comment_alert), for: .touchUpInside)
+            comment.more.addTarget(self, action: #selector(self.comment_alert_1), for: .touchUpInside)
             
+            comment.like.tag = row.id ?? 0
+            comment.dislike.tag = row.id ?? 0
+            
+            comment.like.addTarget(self, action: #selector(self.comment_like), for: .touchUpInside)
+            comment.dislike.addTarget(self, action: #selector(self.comment_dislike), for: .touchUpInside)
             return comment
         }
+    }
+    
+    @objc func comment_like(sender : UIButton) {
+        print("\(sender.tag) + like")
+    }
+    @objc func comment_dislike(sender : UIButton) {
+        print("\(sender.tag) + dislike")
     }
 
     // 게임 정보 조회
@@ -177,7 +192,18 @@ class Game_info: UIViewController,UITableViewDelegate,UITableViewDataSource,UITe
                     self.game_image_url = json["data"]["img_link"].stringValue
                     self.game_video_url = json["data"]["video_link"].stringValue
                     self.game_summary = json["data"]["summary"].stringValue
-                    //self.table.reloadData()
+                    
+                    
+                    self.Game_namelabel.text = self.game_title
+                    
+                    if let url = URL(string :self.game_image_url) {
+                        self.getData(from: url) { data, response, error in
+                            guard let data = data, error == nil else { return }
+                            DispatchQueue.main.async() {
+                                self.Game_imgview.image = UIImage(data: data)
+                            }
+                        }
+                    }
                 }
             } else {
                 self.showalert(message: "게임 데이터 조회 네트워크 오류",can: 0)
@@ -195,7 +221,7 @@ class Game_info: UIViewController,UITableViewDelegate,UITableViewDataSource,UITe
                 if (response.result.value) != nil {
                     let json = JSON(response.result.value!)
                     self.comment_number = json["data"]["count"].intValue
-                    
+
                     for (_,subJson):(String, JSON) in json["data"]["comments"] {
                         let id = subJson["id"].intValue
                         let value = subJson["value"].stringValue
@@ -211,7 +237,6 @@ class Game_info: UIViewController,UITableViewDelegate,UITableViewDataSource,UITe
                         
                         self.comment.append(com)
                     }
-                    
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.1, execute: {
                         self.table.isHidden = false
                         self.activity.stopAnimating()
@@ -227,6 +252,34 @@ class Game_info: UIViewController,UITableViewDelegate,UITableViewDataSource,UITe
         }
     }
     
+    // 게임 추천
+    func rate_game() {
+        if rating == 0 {
+            print("rate error")
+            return
+        }
+        print("진입")
+        
+        let params: [String: Double] = ["value" : rating]
+        let heads: [String: String] = ["x-access-token" : User_data.string(forKey: "User_token") ?? ""]
+        
+        let url = api.pre + "games/\(id)/rates"
+        Alamofire.request(url, method: .post, parameters: params, headers: heads).responseJSON {(response) in
+            if response.result.isSuccess {
+                let json = JSON(response.result.value!)
+                let status = json["status"].stringValue
+                if status == "success" {
+                    print("추천 성공")
+                } else {
+                    self.showalert(message: "평가 오류\n" + json["data"].stringValue,can: 1)
+                }
+            } else {
+                self.showalert(message: "평가 작성 네트워크 오류",can: 0)
+            }
+            
+        }
+    }
+    
     // 게임 댓글 작성
     @objc func write_game_comment() {
         if comment_text == ""{
@@ -238,13 +291,12 @@ class Game_info: UIViewController,UITableViewDelegate,UITableViewDataSource,UITe
         let heads: [String: String] = ["x-access-token" : User_data.string(forKey: "User_token") ?? ""]
         
         let url = api.pre + "games/\(id)/comments"
-        Alamofire.request(url, method: .post, parameters: params, encoding: JSONEncoding.default, headers : heads).responseJSON {(response) in
+        Alamofire.request(url, method: .post, parameters: params, headers: heads).responseJSON {(response) in
             if response.result.isSuccess {
                 let json = JSON(response.result.value!)
                 let status = json["status"].stringValue
                 if status == "success" {
                     self.comment.removeAll()
-                    
                     self.get_game_comment()
                 } else {
                     self.showalert(message: "댓글 입력 오류\n" + json["data"].stringValue,can: 1)
@@ -260,13 +312,13 @@ class Game_info: UIViewController,UITableViewDelegate,UITableViewDataSource,UITe
         let heads: [String : String] = [
             "x-access-token" : User_data.string(forKey: "User_token") ?? ""
         ]
-        
         let url = api.pre + "games/\(id)/comments/\(comment_id)"
         
         Alamofire.request(url, method: .delete, headers : heads).responseJSON {(response) in
             if response.result.isSuccess {
                 let json = JSON(response.result.value!)
                 let status = json["status"].stringValue
+                print(json)
                 if status == "success" {
                     self.comment.removeAll()
                     self.get_game_comment()
@@ -280,14 +332,18 @@ class Game_info: UIViewController,UITableViewDelegate,UITableViewDataSource,UITe
     }
     
     // 게임 댓글 수정
-    func modify_game_comment(comment_id : Int) {
+    func modify_game_comment(comment_id : Int,text : String) {
         let heads: [String: String] = [
             "x-access-token" : User_data.string(forKey: "User_token") ?? ""
         ]
         
+        let params: [String: String] = [
+            "value" : text
+        ]
+        
         let url = api.pre + "games/\(id)/comments/\(comment_id)"
         
-        Alamofire.request(url, method: .delete, headers : heads).responseJSON {(response) in
+        Alamofire.request(url, method: .put, parameters: params, headers: heads).responseJSON {(response) in
             if response.result.isSuccess {
                 let json = JSON(response.result.value!)
                 let status = json["status"].stringValue
@@ -296,7 +352,7 @@ class Game_info: UIViewController,UITableViewDelegate,UITableViewDataSource,UITe
                     self.comment.removeAll()
                     self.get_game_comment()
                 } else {
-                    self.showalert(message: "댓글 삭제 오류\n" + json["data"].stringValue,can: 0)
+                    self.showalert(message: "댓글 수정 오류\n" + json["data"].stringValue,can: 0)
                 }
             } else {
                 self.showalert(message: "comment data time error\n" + response.result.description,can: 0)
@@ -304,15 +360,15 @@ class Game_info: UIViewController,UITableViewDelegate,UITableViewDataSource,UITe
         }
     }
     
-    @objc func comment_alert(sender : UIButton) {
+    @objc func comment_alert_1(sender : UIButton) {
         let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         let delete = UIAlertAction(title: "삭제", style: .default) {
             (result:UIAlertAction) -> Void in
-            self.delete_game_comment(comment_id: sender.tag)
+            self.comment_alert_2(id: sender.tag,which: 1)
         }
         let modify = UIAlertAction(title: "수정", style: .default) {
             (result:UIAlertAction) -> Void in
-            self.modify_game_comment(comment_id: sender.tag)
+            self.comment_alert_2(id : sender.tag,which: 2)
         }
         let singo = UIAlertAction(title: "신고", style: .default) {
             (result:UIAlertAction) -> Void in
@@ -324,8 +380,53 @@ class Game_info: UIViewController,UITableViewDelegate,UITableViewDataSource,UITe
         alert.addAction(singo)
         alert.addAction(cancel)
         self.present(alert,animated: true)
+        
         return
     }
+    
+    func comment_alert_2(id : Int, which : Int) {
+        var message : String = ""
+        
+        if which == 1 {
+            message = "댓글을 삭제하십니까?"
+        } else {
+            message = ""
+        }
+        
+        let alert = UIAlertController(title: "댓글", message: message, preferredStyle: .alert)
+        
+        let delete = UIAlertAction(title: "삭제", style: .destructive) {
+            (result:UIAlertAction) -> Void in
+            self.delete_game_comment(comment_id: id)
+        }
+        
+        let modify = UIAlertAction(title: "수정", style: .destructive) {
+            (result:UIAlertAction) -> Void in
+            let modify_field = alert.textFields![0]
+            
+            if modify_field.text == "" {
+                alert.message = "수정값이 공백입니다."
+            } else {
+                self.modify_game_comment(comment_id: id,text: modify_field.text ?? "")
+            }
+        }
+        
+        let cancel = UIAlertAction(title: "취소", style: .cancel)
+        
+        if which == 1 {
+            alert.addAction(delete)
+        } else {
+            alert.addTextField { (field) in
+                field.placeholder = "수정할 댓글을 입력하세요."
+            }
+            alert.addAction(modify)
+        }
+        
+        alert.addAction(cancel)
+        self.present(alert,animated: true)
+        return
+    }
+    // 게임 댓글 작성
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         if range.length == 1 {
@@ -345,9 +446,11 @@ class Game_info: UIViewController,UITableViewDelegate,UITableViewDataSource,UITe
     @objc func like(sender: UIButton) {
         self.performSegue(withIdentifier: "Post", sender: sender.tag)
     }
+    
     @objc func rate(sender: UIButton) {
-        self.performSegue(withIdentifier: "Post", sender: sender.tag)
+        
     }
+    
     @objc func community(sender: UIButton) {
         self.performSegue(withIdentifier: "Post", sender: sender.tag)
     }

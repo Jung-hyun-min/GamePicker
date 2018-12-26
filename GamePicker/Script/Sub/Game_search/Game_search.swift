@@ -11,11 +11,14 @@ class Game_search: UIViewController,UITableViewDelegate,UITableViewDataSource,UI
     
     let api = Api_url()
     
+    let imageCache = NSCache<NSString, UIImage>()
+    
     // 모든 게임을 저장할 배열
     lazy var all_game : [Game_VO] = {
         var datalist = [Game_VO]()
         return datalist
     }()
+    
     // 저장된 게임을 저장할 배열
     lazy var searched_game : [Game_VO] = {
         var datalist = [Game_VO]()
@@ -32,17 +35,6 @@ class Game_search: UIViewController,UITableViewDelegate,UITableViewDataSource,UI
         textFieldInsideSearchBar?.textColor = UIColor.white
         
         // http get
-        get_games()
-    }
-    
-    // 네비게이션 아이템 새로고침
-    @IBAction func refresh(_ sender: Any) {
-        self.search_bar.isHidden = true
-        self.activity.startAnimating()
-        self.activity.isHidden = false
-        state.text = "게임정보 동기화중.."
-        all_game.removeAll()
-        searched_game.removeAll()
         get_games()
     }
     
@@ -87,7 +79,7 @@ class Game_search: UIViewController,UITableViewDelegate,UITableViewDataSource,UI
         if searched_game.count == 0 {
             tableView.isHidden = true
             if search_bar.text == "" {
-                state.text = "공백 검색"
+                state.text = "검색어를 입력하세요"
             } else {
                 state.text = "\"\(search_bar.text ?? "")\"(은)는 없습니다"
             }
@@ -105,14 +97,20 @@ class Game_search: UIViewController,UITableViewDelegate,UITableViewDataSource,UI
         
         cell.game_title?.text = row.title
         
+        
+        
+        
+       
         if let url = URL(string :row.thumbnail ?? "") {
             getData(from: url) { data, response, error in
                 guard let data = data, error == nil else { return }
+                
                 DispatchQueue.main.async() {
                     cell.game_image.image = UIImage(data: data)
                 }
             }
         }
+ 
         return cell
     }
     
@@ -136,6 +134,7 @@ class Game_search: UIViewController,UITableViewDelegate,UITableViewDataSource,UI
             } else {
                 if let game_title = game.title {
                     return game_title.lowercased().contains(search_bar.text!.lowercased())
+
                 }
             }
             return false
@@ -144,5 +143,21 @@ class Game_search: UIViewController,UITableViewDelegate,UITableViewDataSource,UI
         searchBar.resignFirstResponder()
     }
     
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        searched_game = all_game.filter({ game -> Bool in
+            if search_bar.text == "" {
+                return false
+            } else {
+                if let game_title = game.title {
+                    return game_title.lowercased().contains(search_bar.text!.lowercased())
+                    
+                }
+            }
+            return false
+        })
+        search_table.reloadData()
+        //searchBar.resignFirstResponder()
+
+    }
     
 }

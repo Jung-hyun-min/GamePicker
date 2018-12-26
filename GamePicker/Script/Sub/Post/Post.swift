@@ -23,31 +23,47 @@ class Post: UIViewController,UITableViewDataSource,UITableViewDelegate {
         return refreshControl
     }()
     
-    @objc func actualizerData(_ refreshControl : UIRefreshControl){
+    @objc func actualizerData(_ refreshControl : UIRefreshControl) {
         refresh()
         refreshControl.endRefreshing()
     }
     
     // 새로고침 실행
     @objc func refresh() {
+        post_arr.removeAll()
+        self.get_posts()
         self.table.reloadData()
     }
+    
     @objc func write() {
         performSegue(withIdentifier: "write", sender: game_id)
     }
+    
     @objc func search() {
-        performSegue(withIdentifier: "read", sender: game_id)
+        showalert(message: "준비중인 기능입니다.", can: 1)
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "read" {
+            let param = segue.destination as! Post_read
+            param.post_id = sender as! Int
+        }
+        else {
+            let param = segue.destination as! Post_write
+            param.game_id = game_id
+        }
+        
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationbar()
         if game_id == 0 {
-            showalert(message: "GameID Error", can: 0)
+            self.navigationItem.title = "자유 게시판"
         }
         
         navigationItem.title = game_title
-        get_games()
+        get_posts()
         self.table.addSubview(self.refreshControl)
     }
     
@@ -102,10 +118,12 @@ class Post: UIViewController,UITableViewDataSource,UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print("\(indexPath.row)")
+        let row = self.post_arr[indexPath.row]
+        let post_id : Int = row.id ?? 0
+        self.performSegue(withIdentifier: "read", sender: post_id)
     }
     
-    func get_games() {
+    func get_posts() {
         print("gameID : \(game_id)")
         let url = api.pre + "posts?gameID=\(game_id)"
         

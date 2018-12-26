@@ -5,14 +5,9 @@ class Register_birth: UIViewController {
     @IBOutlet var next_but_o: UIButton!
     @IBOutlet var birth_o: UIDatePicker!
     
-    let User = UIApplication.shared.delegate as? AppDelegate
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-        if let name = User?.name {
-            hello.text = name + "님 안녕하세요"
-        }
-        next_but_o.layer.cornerRadius = 5
+
     }
     
     @IBAction func undo(_ sender: Any) {
@@ -41,7 +36,7 @@ class Register_birth: UIViewController {
         let alert_title : String = dateformatter1.string(from: birth_o.date)
         let birth : String = dateformatter2.string(from: birth_o.date)
         print(birth)
-        User?.birth = birth
+        
         let alert = UIAlertController(title: alert_title, message: nil, preferredStyle: .alert)
         let cancel = UIAlertAction(title: "아니요", style: .cancel)
         let ok = UIAlertAction(title: "맞아요", style: .default) {
