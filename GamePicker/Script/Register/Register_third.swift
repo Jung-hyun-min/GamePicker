@@ -1,13 +1,15 @@
 import UIKit
 
-class Register_second: UIViewController {
-    @IBOutlet var birth: UIDatePicker!
-    
+class Register_third: UIViewController {
+
     var mail : String = ""
     var password : String = ""
+    var birth : String = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        // Do any additional setup after loading the view.
     }
     
     @IBAction func cancel(_ sender: Any) {
@@ -26,34 +28,15 @@ class Register_second: UIViewController {
         alert.addAction(ok2)
         self.present(alert,animated: true)
     }
-    
+
     @IBAction func next(_ sender: Any) {
-        print(birth.date)
-        let dateformatter1 = DateFormatter()
-        let dateformatter2 = DateFormatter()
-        dateformatter1.dateFormat = "yyyy년 MM월 dd일 맞아요?"
-        dateformatter2.dateFormat = "yyyy-MM-dd"
-        let alert_title : String = dateformatter1.string(from: birth.date)
-        let date : String = dateformatter2.string(from: birth.date)
-        print(date)
-        
-        let alert = UIAlertController(title: alert_title, message: nil, preferredStyle: .alert)
-        let cancel = UIAlertAction(title: "아니요", style: .cancel)
-        let ok = UIAlertAction(title: "맞아요", style: .default) {
-            (result:UIAlertAction) -> Void in
-            self.performSegue(withIdentifier: "third", sender: self)
-        }
-        alert.addAction(cancel)
-        alert.addAction(ok)
-        self.present(alert,animated: true)
+        performSegue(withIdentifier: "fourth", sender: self)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        let vc = segue.destination as! Register_third
+        let vc = segue.destination as! Register_fourth
         vc.mail = mail
         vc.password = password
         //vc.birth = birth.date
     }
 }
-
-

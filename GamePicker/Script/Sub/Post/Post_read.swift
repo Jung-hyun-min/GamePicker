@@ -17,8 +17,6 @@ class Post_read: UIViewController,UITableViewDelegate,UITableViewDataSource {
     
     var post_id : Int = 0
     
-    let api = Api_url()
-    
     lazy var comment : [Comment_VO] = {
         var datalist = [Comment_VO]()
         return datalist
@@ -31,22 +29,18 @@ class Post_read: UIViewController,UITableViewDelegate,UITableViewDataSource {
     }
     
     func get_post() {
-        let url = api.pre + "posts/\(post_id)"
-        
-        Alamofire.request(url).responseJSON { (response) in
+        Alamofire.request(Api.url + "posts/\(post_id)").responseJSON { (response) in
             if response.result.isSuccess {
-                if (response.result.value) != nil {
-                    let json = JSON(response.result.value!)
-                    let status = json["status"].stringValue
-                    print(response.result.value!)
-                    if status == "success" {
-                        self.name.text = json["data"]["name"].stringValue
-                        self.update.text = json["data"]["update_date"].stringValue
-                        self.contents.text = json["data"]["content"].stringValue
-                        self.topic.text = json["data"]["title"].stringValue
-                        self.recommend.text = "\(json["data"]["recommend"].intValue)추"
-                        self.disrecommend.text = "\(json["data"]["disrecommend"].intValue)비추"
-                    }
+                let json = JSON(response.result.value!)
+                let status = json["status"].stringValue
+                print(response.result.value!)
+                if status == "success" {
+                    self.name.text = json["data"]["name"].stringValue
+                    self.update.text = json["data"]["update_date"].stringValue
+                    self.contents.text = json["data"]["content"].stringValue
+                    self.topic.text = json["data"]["title"].stringValue
+                    self.recommend.text = "\(json["data"]["recommend"].intValue)추"
+                    self.disrecommend.text = "\(json["data"]["disrecommend"].intValue)비추"
                 }
             } else {
                 self.showalert(message: "게시글 데이터 API 오류\n" + response.result.debugDescription, can: 0)
@@ -55,9 +49,7 @@ class Post_read: UIViewController,UITableViewDelegate,UITableViewDataSource {
     }
     
     func get_post_comment() {
-        let url = api.pre + "posts/\(post_id)/comments"
-        
-        Alamofire.request(url).responseJSON { (response) in
+        Alamofire.request(Api.url + "posts/\(post_id)/comments").responseJSON { (response) in
             if response.result.isSuccess {
                 // 성공 했을 때
                 if (response.result.value) != nil {
@@ -106,8 +98,6 @@ class Post_read: UIViewController,UITableViewDelegate,UITableViewDataSource {
         comment.value.text = row.value
         comment.date.text = row.update_date
         
-        comment.more.tag = row.id ?? 0
-        comment.more.addTarget(self, action: #selector(comment_alert_1), for: .touchUpInside)
         
         return comment
     }
@@ -183,9 +173,8 @@ class Post_read: UIViewController,UITableViewDelegate,UITableViewDataSource {
         let heads: [String : String] = [
             "x-access-token" : UserDefaults.standard.string(forKey: "User_token") ?? ""
         ]
-        let url = api.pre + "posts/\(post_id)/comments/\(comment_id)"
-        
-        Alamofire.request(url, method: .delete, headers : heads).responseJSON {(response) in
+
+        Alamofire.request(Api.url + "posts/\(post_id)/comments/\(comment_id)", method: .delete, headers : heads).responseJSON {(response) in
             if response.result.isSuccess {
                 let json = JSON(response.result.value!)
                 let status = json["status"].stringValue
@@ -211,10 +200,8 @@ class Post_read: UIViewController,UITableViewDelegate,UITableViewDataSource {
         let params: [String: String] = [
             "value" : text
         ]
-        
-        let url = api.pre + "posts/\(post_id)/comments/\(comment_id)"
-        
-        Alamofire.request(url, method: .put, parameters: params, headers: heads).responseJSON {(response) in
+
+        Alamofire.request(Api.url + "posts/\(post_id)/comments/\(comment_id)", method: .put, parameters: params, headers: heads).responseJSON {(response) in
             if response.result.isSuccess {
                 let json = JSON(response.result.value!)
                 let status = json["status"].stringValue
@@ -236,10 +223,8 @@ class Post_read: UIViewController,UITableViewDelegate,UITableViewDataSource {
         let heads: [String : String] = [
             "x-access-token" : UserDefaults.standard.string(forKey: "User_token") ?? ""
         ]
-        
-        let url = api.pre + "posts/\(post_id)/recommend"
-        
-        Alamofire.request(url, method: .post, headers : heads).responseJSON {(response) in
+
+        Alamofire.request(Api.url + "posts/\(post_id)/recommend", method: .post, headers : heads).responseJSON {(response) in
             if response.result.isSuccess {
                 let json = JSON(response.result.value!)
                 let status = json["status"].stringValue
@@ -260,10 +245,8 @@ class Post_read: UIViewController,UITableViewDelegate,UITableViewDataSource {
         let heads: [String : String] = [
             "x-access-token" : UserDefaults.standard.string(forKey: "User_token") ?? ""
         ]
-        
-        let url = api.pre + "posts/\(post_id)/disrecommend"
-        
-        Alamofire.request(url, method: .post, headers : heads).responseJSON {(response) in
+
+        Alamofire.request(Api.url + "posts/\(post_id)/disrecommend", method: .post, headers : heads).responseJSON {(response) in
             if response.result.isSuccess {
                 let json = JSON(response.result.value!)
                 let status = json["status"].stringValue

@@ -4,9 +4,7 @@ import SwiftyJSON
 
 class Post: UIViewController,UITableViewDataSource,UITableViewDelegate {
     @IBOutlet var table: UITableView!
-    
-    let api = Api_url()
-    
+
     var game_id : Int = 0
     var game_title : String = ""
     
@@ -125,9 +123,8 @@ class Post: UIViewController,UITableViewDataSource,UITableViewDelegate {
     
     func get_posts() {
         print("gameID : \(game_id)")
-        let url = api.pre + "posts?gameID=\(game_id)"
-        
-        Alamofire.request(url).responseJSON { (response) in
+
+        Alamofire.request(Api.url + "posts?gameID=\(game_id)").responseJSON { (response) in
             if response.result.isSuccess {
                 // 성공 했을 때
                 if (response.result.value) != nil {

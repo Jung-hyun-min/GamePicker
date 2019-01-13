@@ -1,28 +1,30 @@
 import UIKit
+import Alamofire
 
-class Api_url {
-    let pre = "http://api.gamepicker.me/"
+class Api {
+    class var url:String {
+        return "http://api.gamepicker.co.kr/"
+    }
+}
+
+class Connectivity {
+    class var isConnectedToInternet: Bool {
+        return NetworkReachabilityManager()!.isReachable
+    }
 }
 
 extension UIViewController {
     var tutorialSB: UIStoryboard {
         return UIStoryboard(name: "Tutorial", bundle: Bundle.main)
     }
-    
     func instanceTutorialVC(name: String) -> UIViewController? {
         return self.tutorialSB.instantiateViewController(withIdentifier: name)
     }
-    
     var MainSB: UIStoryboard {
         return UIStoryboard(name: "Main", bundle: Bundle.main)
     }
-    
     func instanceMainVC(name: String) -> UIViewController? {
         return self.MainSB.instantiateViewController(withIdentifier: name)
-    }
-    
-    func getData(from url: URL, completion: @escaping (Data?, URLResponse?, Error?) -> ()) {
-        URLSession.shared.dataTask(with: url, completionHandler: completion).resume()
     }
     
     func showalert(message : String, can : Int) {
@@ -32,7 +34,6 @@ extension UIViewController {
             self.navigationController?.popViewController(animated: true)
         }
         let cancel = UIAlertAction(title: "확인", style: .cancel)
-        // 뒤로가기
         if can == 0 { // 0 이면 뒤로가기 추가
             alert.addAction(ok)
         } else { // 1 이면 뒤로 가기 없음
@@ -40,19 +41,7 @@ extension UIViewController {
         }
         self.present(alert,animated: true)
         return
-    }
     
-    // 유저 디포트 삭제
-    func delete_userdata() {
-        UserDefaults.standard.removeObject(forKey: "User_point")
-        UserDefaults.standard.removeObject(forKey: "User_gender")
-        UserDefaults.standard.removeObject(forKey: "User_name")
-        UserDefaults.standard.removeObject(forKey: "User_email")
-        UserDefaults.standard.removeObject(forKey: "User_introduce")
-        UserDefaults.standard.removeObject(forKey: "User_admin")
-        UserDefaults.standard.removeObject(forKey: "User_birthday")
-        UserDefaults.standard.removeObject(forKey: "User_premium")
-        UserDefaults.standard.removeObject(forKey: "User_id")
     }
     
     func navigation_icon() {
@@ -100,21 +89,43 @@ extension UIViewController {
         self.navigationItem.setRightBarButtonItems([search_item, message_item, alarm_item], animated: false)
         self.navigationItem.setLeftBarButtonItems([logo_item, title_item], animated: false)
     }
+    
     @objc func navi_logo() {
         print("logo")
     }
-    
     @objc func navi_alarm() {
         print("alarm")
     }
-    
     @objc func navi_message() {
         print("message")
     }
-    
     @objc func navi_search() {
-        print("search")
-        performSegue(withIdentifier: "search", sender: self)
+        guard let uvc = self.storyboard?.instantiateViewController(withIdentifier: "search") else {
+            return
+        }
+        self.navigationController?.pushViewController(uvc, animated: true)
     }
-    
+}
+
+extension UIViewController: UITextFieldDelegate {
+    func addToolBar(textField: UITextField, title: String) {
+        let toolbar = UIToolbar()
+        toolbar.barStyle = UIBarStyle.default
+        toolbar.tintColor = UIColor.white
+        toolbar.barTintColor = UIColor(red:0.91, green:0.08, blue:0.41, alpha:1.0)
+        toolbar.isTranslucent = false
+        toolbar.sizeToFit()
+        
+        let done = UIBarButtonItem(title: title, style: .plain, target: self, action: #selector(barPressed))
+        UIBarButtonItem.appearance().setTitleTextAttributes(
+            [NSAttributedString.Key.font : UIFont.boldSystemFont(ofSize: 18)], for: .normal)
+        let flexible = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        
+        toolbar.setItems([flexible, done, flexible], animated: false)
+        toolbar.isUserInteractionEnabled = true
+        textField.inputAccessoryView = toolbar
+    }
+    @objc func barPressed(){
+        print("bar")
+    }
 }

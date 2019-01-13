@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="Center_logout" customModule="GamePicker" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="350" height="400"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Q3I-Fr-5kt" customClass="CornerRoundingView" customModule="SwiftMessages">
+                    <rect key="frame" x="25" y="50" width="300" height="300"/>
+                    <subviews>
+                        <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="92Z-Pe-XBx">
+                            <rect key="frame" x="0.0" y="245" width="300" height="55"/>
+                            <subviews>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dZB-Qr-XJa">
+                                    <rect key="frame" x="0.0" y="0.0" width="107" height="55"/>
+                                    <color key="backgroundColor" red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <fontDescription key="fontDescription" type="system" weight="medium" pointSize="16"/>
+                                    <state key="normal" title="취소">
+                                        <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </state>
+                                    <connections>
+                                        <action selector="cancel:" destination="iN0-l3-epB" eventType="touchUpInside" id="Ivu-r8-FsC"/>
+                                    </connections>
+                                </button>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="k8z-lY-HPL">
+                                    <rect key="frame" x="107" y="0.0" width="193" height="55"/>
+                                    <color key="backgroundColor" red="0.90588235294117647" green="0.078431372549019607" blue="0.41176470588235292" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <fontDescription key="fontDescription" type="system" weight="medium" pointSize="16"/>
+                                    <state key="normal" title="로그아웃">
+                                        <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </state>
+                                    <connections>
+                                        <action selector="logout:" destination="iN0-l3-epB" eventType="touchUpInside" id="z4R-pI-B3q"/>
+                                    </connections>
+                                </button>
+                            </subviews>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="55" id="Qfh-sL-Ith"/>
+                                <constraint firstItem="k8z-lY-HPL" firstAttribute="width" secondItem="dZB-Qr-XJa" secondAttribute="width" multiplier="200:111" id="RPl-CH-Od0"/>
+                            </constraints>
+                        </stackView>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oL9-aR-c8V">
+                            <rect key="frame" x="105" y="45" width="90" height="90"/>
+                            <subviews>
+                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_logout.png" translatesAutoresizingMaskIntoConstraints="NO" id="5uc-Py-f7R">
+                                    <rect key="frame" x="26" y="26" width="38" height="38"/>
+                                </imageView>
+                            </subviews>
+                            <color key="backgroundColor" red="0.53725490196078429" green="0.59607843137254901" blue="0.63921568627450975" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <constraints>
+                                <constraint firstAttribute="bottom" secondItem="5uc-Py-f7R" secondAttribute="bottom" constant="26" id="57D-rt-RNa"/>
+                                <constraint firstAttribute="trailing" secondItem="5uc-Py-f7R" secondAttribute="trailing" constant="26" id="8Qa-is-QIQ"/>
+                                <constraint firstAttribute="width" constant="90" id="SdU-cZ-Cf6"/>
+                                <constraint firstAttribute="height" constant="90" id="msQ-Aq-B6Z"/>
+                                <constraint firstItem="5uc-Py-f7R" firstAttribute="leading" secondItem="oL9-aR-c8V" secondAttribute="leading" constant="26" id="t02-S9-cpu"/>
+                                <constraint firstItem="5uc-Py-f7R" firstAttribute="top" secondItem="oL9-aR-c8V" secondAttribute="top" constant="26" id="zYf-Mz-sAO"/>
+                            </constraints>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                    <integer key="value" value="45"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
+                        </view>
+                        <stackView opaque="NO" contentMode="scaleToFill" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="oyg-MD-lYA">
+                            <rect key="frame" x="65" y="178" width="170.5" height="21.5"/>
+                            <subviews>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="로그아웃" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gPm-ry-zc4">
+                                    <rect key="frame" x="0.0" y="0.0" width="62.5" height="21.5"/>
+                                    <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
+                                    <color key="textColor" red="0.90588235294117647" green="0.078431372549019607" blue="0.41176470588235292" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="하시겠습니까?" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xLh-TU-ac5">
+                                    <rect key="frame" x="67.5" y="0.0" width="103" height="21.5"/>
+                                    <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
+                                    <nil key="textColor"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                            </subviews>
+                        </stackView>
+                    </subviews>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstAttribute="bottom" secondItem="92Z-Pe-XBx" secondAttribute="bottom" id="E3j-w0-LlG"/>
+                        <constraint firstAttribute="trailing" secondItem="92Z-Pe-XBx" secondAttribute="trailing" id="Ffy-WC-mW1"/>
+                        <constraint firstItem="oyg-MD-lYA" firstAttribute="top" secondItem="oL9-aR-c8V" secondAttribute="bottom" constant="43" id="G8h-y7-PeL"/>
+                        <constraint firstItem="oyg-MD-lYA" firstAttribute="centerX" secondItem="Q3I-Fr-5kt" secondAttribute="centerX" id="PSh-xF-n1U"/>
+                        <constraint firstItem="92Z-Pe-XBx" firstAttribute="top" secondItem="oyg-MD-lYA" secondAttribute="bottom" constant="45.5" id="bkn-eI-Uz9"/>
+                        <constraint firstItem="92Z-Pe-XBx" firstAttribute="leading" secondItem="Q3I-Fr-5kt" secondAttribute="leading" id="hf6-0R-3Pz"/>
+                        <constraint firstItem="oL9-aR-c8V" firstAttribute="centerY" secondItem="Q3I-Fr-5kt" secondAttribute="centerY" multiplier="3/5" id="oAX-Ge-iCY"/>
+                        <constraint firstItem="oL9-aR-c8V" firstAttribute="centerX" secondItem="Q3I-Fr-5kt" secondAttribute="centerX" id="oIP-h1-kM2"/>
+                        <constraint firstItem="oL9-aR-c8V" firstAttribute="top" secondItem="Q3I-Fr-5kt" secondAttribute="top" constant="45" id="qgq-gF-z8y"/>
+                    </constraints>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                            <real key="value" value="6"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                </view>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="Q3I-Fr-5kt" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="1ri-7V-fHe"/>
+                <constraint firstItem="Q3I-Fr-5kt" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="50" id="F5I-ic-6JT"/>
+                <constraint firstItem="Q3I-Fr-5kt" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="25" id="HuV-W0-O8d"/>
+                <constraint firstAttribute="trailing" secondItem="Q3I-Fr-5kt" secondAttribute="trailing" constant="25" id="WSK-zW-Ykd"/>
+                <constraint firstAttribute="bottom" secondItem="Q3I-Fr-5kt" secondAttribute="bottom" constant="50" id="x8x-XK-Tsu"/>
+                <constraint firstItem="Q3I-Fr-5kt" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="yvR-DZ-vZv"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="-280" y="343.62818590704649"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="ic_logout.png" width="60" height="60"/>
+    </resources>
+</document>

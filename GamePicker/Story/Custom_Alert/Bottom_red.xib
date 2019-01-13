@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="7E3-KB-S8M" customClass="Bottom_red" customModule="GamePicker" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="200" height="75"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xDS-jl-JsM" customClass="CornerRoundingView" customModule="SwiftMessages">
+                    <rect key="frame" x="42.5" y="15" width="115.5" height="45"/>
+                    <subviews>
+                        <stackView opaque="NO" contentMode="scaleToFill" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="uDx-cB-YEl">
+                            <rect key="frame" x="20" y="10" width="75.5" height="25"/>
+                            <subviews>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="I8s-ku-zZr">
+                                    <rect key="frame" x="0.0" y="0.0" width="40.5" height="25"/>
+                                    <fontDescription key="fontDescription" type="system" weight="medium" pointSize="16"/>
+                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OV0-En-t7e">
+                                    <rect key="frame" x="50.5" y="0.0" width="25" height="25"/>
+                                    <constraints>
+                                        <constraint firstAttribute="width" constant="25" id="75d-pB-ExX"/>
+                                        <constraint firstAttribute="height" constant="25" id="tO1-HW-j72"/>
+                                    </constraints>
+                                    <state key="normal" image="ic_close_white.png"/>
+                                    <connections>
+                                        <action selector="cancel" destination="7E3-KB-S8M" eventType="touchUpInside" id="Ffm-jo-bNo"/>
+                                    </connections>
+                                </button>
+                            </subviews>
+                        </stackView>
+                    </subviews>
+                    <color key="backgroundColor" red="0.90588235294117647" green="0.078431372549019607" blue="0.41176470588235292" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="trailing" secondItem="uDx-cB-YEl" secondAttribute="trailing" constant="20" id="CXe-Gv-jT8"/>
+                        <constraint firstItem="uDx-cB-YEl" firstAttribute="leading" secondItem="xDS-jl-JsM" secondAttribute="leading" constant="20" id="pXv-Xa-iSg"/>
+                        <constraint firstItem="uDx-cB-YEl" firstAttribute="top" secondItem="xDS-jl-JsM" secondAttribute="top" constant="10" id="rsZ-rH-BQw"/>
+                        <constraint firstAttribute="bottom" secondItem="uDx-cB-YEl" secondAttribute="bottom" constant="10" id="w3Z-L1-ysw"/>
+                    </constraints>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                            <real key="value" value="25"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                </view>
+            </subviews>
+            <color key="backgroundColor" white="1" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstItem="xDS-jl-JsM" firstAttribute="top" secondItem="7E3-KB-S8M" secondAttribute="top" constant="15" id="HxT-00-Fny"/>
+                <constraint firstItem="xDS-jl-JsM" firstAttribute="centerX" secondItem="7E3-KB-S8M" secondAttribute="centerX" id="XF3-hn-IhY"/>
+                <constraint firstAttribute="bottom" secondItem="xDS-jl-JsM" secondAttribute="bottom" constant="15" id="jK5-M2-xYj"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <connections>
+                <outlet property="title" destination="I8s-ku-zZr" id="W0f-bh-olu"/>
+            </connections>
+            <point key="canvasLocation" x="-464" y="872.11394302848578"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="ic_close_white.png" width="36" height="36"/>
+    </resources>
+</document>

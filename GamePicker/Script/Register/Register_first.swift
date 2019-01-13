@@ -1,6 +1,6 @@
 import UIKit
 
-class Register_first: UIViewController,UITextFieldDelegate {
+class Register_first: UIViewController {
     @IBOutlet var first: NSLayoutConstraint!
     @IBOutlet var second: NSLayoutConstraint!
     @IBOutlet var third: NSLayoutConstraint!
@@ -46,26 +46,12 @@ class Register_first: UIViewController,UITextFieldDelegate {
     
     @IBOutlet var next_but: UIButton!
     
-    lazy var inputToolbar: UIToolbar = {
-        var toolbar = UIToolbar()
-        toolbar.barStyle = .default
-        toolbar.isTranslucent = true
-        toolbar.sizeToFit()
-        
-        var doneButton = UIBarButtonItem(title: "완료", style: .plain, target: self, action: #selector(endEditing))
-        var flexibleSpaceButton = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-        var fixedSpaceButton = UIBarButtonItem(barButtonSystemItem: .fixedSpace, target: nil, action: nil)
-        
-        var nextButton = UIBarButtonItem(image: UIImage(named: "ic_more_close"), style: .plain, target: self, action: #selector(up))
-        var previousButton = UIBarButtonItem(image: UIImage(named: "ic_more"), style: .plain, target: self, action: #selector(down))
-        
-        toolbar.setItems([fixedSpaceButton, nextButton, fixedSpaceButton, previousButton, flexibleSpaceButton, doneButton], animated: false)
-        toolbar.isUserInteractionEnabled = true
-        return toolbar
-    }()
-    
     override func viewDidLoad() {
         super.viewDidLoad()
+        addToolBar(textField: mail_field, title: "다음")
+        addToolBar(textField: password_field, title: "다음")
+        addToolBar(textField: password_chk_field, title: "다음")
+        
         first.constant = 18
         second.constant = 18
         third.constant = 23
@@ -215,13 +201,7 @@ class Register_first: UIViewController,UITextFieldDelegate {
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        if mail_field.isFirstResponder {
-            password_field.becomeFirstResponder()
-        } else if password_field.isFirstResponder {
-            password_chk_field.becomeFirstResponder()
-        } else {
-            endEditing()
-        }
+        endEditing()
         return true
     }
     
@@ -286,40 +266,32 @@ class Register_first: UIViewController,UITextFieldDelegate {
     }
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
-        textField.inputAccessoryView = inputToolbar
         if textField == mail_field {
             mail_under.backgroundColor = UIColor(red:0.91, green:0.08, blue:0.41, alpha:1.0)
-        }
-        else if textField == password_field {
+        } else if textField == password_field {
             password_under.backgroundColor = UIColor(red:0.91, green:0.08, blue:0.41, alpha:1.0)
-        }
-        else if textField == password_chk_field {
+        } else {
             password_chk_under.backgroundColor = UIColor(red:0.91, green:0.08, blue:0.41, alpha:1.0)
         }
     }
     
-    @objc func up() {
+    override func barPressed() {
         if mail_field.isFirstResponder {
-            endEditing()
+            if email_chk() {
+                password_field.becomeFirstResponder()
+            }
+            // 텍스트 필드 실시간 체크
         } else if password_field.isFirstResponder {
-            mail_field.becomeFirstResponder()
-        } else {
-            password_field.becomeFirstResponder()
-        }
-    }
-    
-    @objc func down() {
-        if mail_field.isFirstResponder {
-            password_field.becomeFirstResponder()
-        } else if password_field.isFirstResponder {
-            password_chk_field.becomeFirstResponder()
+            if password_chk() {
+                password_chk_field.becomeFirstResponder()
+            }
         } else {
             endEditing()
+            next(self)
         }
     }
     
     @IBAction func next(_ sender: Any) {
-        // 오류 핸들링 추가
         if password_chk_field.text != password_field.text {
             password_chk_field.becomeFirstResponder()
             password_chk_warn_stack.isHidden = false
@@ -327,7 +299,16 @@ class Register_first: UIViewController,UITextFieldDelegate {
             third.constant = 35
             return
         }
-        performSegue(withIdentifier: "second", sender: self)
+        if email_chk() && password_chk() {
+            performSegue(withIdentifier: "second", sender: self)
+        }
+    }
+    
+    func email_chk() -> Bool {
+        return true
+    }
+    func password_chk() -> Bool {
+        return true
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
