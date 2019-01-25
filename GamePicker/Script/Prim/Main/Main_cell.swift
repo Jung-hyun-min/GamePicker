@@ -1,7 +1,6 @@
 import UIKit
 
 class Main_cell: UITableViewCell {
-    @IBOutlet var card_height: NSLayoutConstraint!
     @IBOutlet var card_view: UIView!
     
     @IBOutlet var rate_view: UIView!
@@ -20,9 +19,8 @@ class Main_cell: UITableViewCell {
     
     @IBOutlet var favorite: UIStackView!
     @IBOutlet var score: UIStackView!
-    @IBOutlet var commuity: UIStackView!
+    @IBOutlet var community: UIStackView!
     
     @IBOutlet var heart: UIImageView!
-    @IBOutlet var star: [UIImageView]!
     
 }

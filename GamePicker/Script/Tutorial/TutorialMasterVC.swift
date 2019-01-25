@@ -4,12 +4,10 @@ class TutorialMasterVC: UIViewController, UIPageViewControllerDataSource {
   var pageVC: UIPageViewController!
   
   // 콘텐츠 뷰 컨트롤러에 들어갈 타이틀과 이미지
-  var contentTitles = ["STEP 1", "STEP 2", "STEP 3", "STEP 4"]
   var contentImages = ["page1", "page2", "page3", "page4"]
   
   @IBAction func close(_ sender: Any) {
-    UserDefaults.standard.set(true, forKey: "tutorial")
-    UserDefaults.standard.synchronize()
+    UserDefaults.standard.set(false, forKey: data.isFirst)
 
     let vc = self.instanceMainVC(name: "select")
     self.present(vc!, animated: true)
@@ -37,16 +35,10 @@ class TutorialMasterVC: UIViewController, UIPageViewControllerDataSource {
   
   func getContentVC(atIndex idx: Int) -> UIViewController? {
     // 인덱스가 데이터 배열 크기 범위를 벗어나면 nil 반환
-    guard self.contentTitles.count >= idx && self.contentTitles.count > 0 else {
-      return nil
-    }
+    guard self.contentImages.count >= idx && self.contentImages.count > 0 else { return nil }
     // "ContentsVC"라는 Storyboard ID를 가진 뷰 컨트롤러의 인스턴스를 생성하고 캐스팅함
-    guard let cvc = self.instanceTutorialVC(name: "ContentsVC") as?
-      TutorialContentsVC else {
-        return nil
-    }
+    guard let cvc = self.instanceTutorialVC(name: "ContentsVC") as? TutorialContentsVC else { return nil }
     // 콘텐츠 뷰 컨트롤러의 내용을 구성
-    cvc.titleText = self.contentTitles[idx]
     cvc.imageFile = self.contentImages[idx]
     cvc.pageIndex = idx
     return cvc
@@ -76,14 +68,14 @@ class TutorialMasterVC: UIViewController, UIPageViewControllerDataSource {
       }
       index += 1 // 현재의 인덱스에 하나를 더함(즉, 다음 페이지 인덱스)
       // 인덱스는 항상 배열 데이터의 크기보다 작아야 한다
-      guard index < self.contentTitles.count else {
+      guard index < self.contentImages.count else {
         return nil
       }
       return self.getContentVC(atIndex: index)
   }
   
   func presentationCount(for pageViewController: UIPageViewController) -> Int {
-    return self.contentTitles.count
+    return self.contentImages.count
   }
   
   func presentationIndex(for pageViewController: UIPageViewController) -> Int {

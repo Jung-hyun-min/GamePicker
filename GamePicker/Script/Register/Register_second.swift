@@ -30,13 +30,9 @@ class Register_second: UIViewController {
     @IBAction func next(_ sender: Any) {
         print(birth.date)
         let dateformatter1 = DateFormatter()
-        let dateformatter2 = DateFormatter()
-        dateformatter1.dateFormat = "yyyy년 MM월 dd일 맞아요?"
-        dateformatter2.dateFormat = "yyyy-MM-dd"
+        dateformatter1.dateFormat = "yyyy년 MM월 dd일"
         let alert_title : String = dateformatter1.string(from: birth.date)
-        let date : String = dateformatter2.string(from: birth.date)
-        print(date)
-        
+
         let alert = UIAlertController(title: alert_title, message: nil, preferredStyle: .alert)
         let cancel = UIAlertAction(title: "아니요", style: .cancel)
         let ok = UIAlertAction(title: "맞아요", style: .default) {
@@ -52,7 +48,11 @@ class Register_second: UIViewController {
         let vc = segue.destination as! Register_third
         vc.mail = mail
         vc.password = password
-        //vc.birth = birth.date
+        
+        let dateformatter2 = DateFormatter()
+        dateformatter2.dateFormat = "yyyy-MM-dd"
+        let date : String = dateformatter2.string(from: birth.date)
+        vc.birth = date
     }
 }
 

@@ -1,17 +1,14 @@
 import UIKit
 
 class Register_third: UIViewController {
-
+    @IBOutlet var next_but: UIButton!
+    
     var mail : String = ""
     var password : String = ""
     var birth : String = ""
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    @IBOutlet var gender: UISegmentedControl!
 
-        // Do any additional setup after loading the view.
-    }
-    
     @IBAction func cancel(_ sender: Any) {
         let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         let cancel = UIAlertAction(title: "계속", style: .cancel)
@@ -29,6 +26,11 @@ class Register_third: UIViewController {
         self.present(alert,animated: true)
     }
 
+    @IBAction func value_changed(_ sender: Any) {
+        next_but.backgroundColor = UIColor(red:0.91, green:0.08, blue:0.41, alpha:1.0)
+        next_but.isEnabled = true
+    }
+    
     @IBAction func next(_ sender: Any) {
         performSegue(withIdentifier: "fourth", sender: self)
     }
@@ -37,6 +39,11 @@ class Register_third: UIViewController {
         let vc = segue.destination as! Register_fourth
         vc.mail = mail
         vc.password = password
-        //vc.birth = birth.date
+        vc.birth = birth
+        if gender.selectedSegmentIndex == 0 {
+            vc.gender = "M"
+        } else {
+            vc.gender = "F"
+        }
     }
 }

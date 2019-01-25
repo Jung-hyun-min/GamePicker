@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="nfc-gm-9RL" customClass="Center_score" customModule="GamePicker" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="350" height="410"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="a2T-Cm-nzM" customClass="CornerRoundingView" customModule="SwiftMessages">
+                    <rect key="frame" x="23" y="60" width="304" height="330"/>
+                    <subviews>
+                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="4Va-TA-4Uv">
+                            <rect key="frame" x="15" y="205" width="274" height="110"/>
+                            <subviews>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IQ7-t4-BoY">
+                                    <rect key="frame" x="0.0" y="0.0" width="274" height="55"/>
+                                    <color key="backgroundColor" red="0.90588235289999997" green="0.078431372550000003" blue="0.41176470590000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <fontDescription key="fontDescription" type="system" weight="medium" pointSize="16"/>
+                                    <state key="normal" title="평가완료">
+                                        <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </state>
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                            <integer key="value" value="5"/>
+                                        </userDefinedRuntimeAttribute>
+                                    </userDefinedRuntimeAttributes>
+                                    <connections>
+                                        <action selector="logout:" destination="nfc-gm-9RL" eventType="touchUpInside" id="Ln3-Ig-R6l"/>
+                                    </connections>
+                                </button>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ijb-oV-eQt">
+                                    <rect key="frame" x="0.0" y="55" width="274" height="55"/>
+                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <fontDescription key="fontDescription" type="system" weight="medium" pointSize="16"/>
+                                    <state key="normal" title="다음에 평가하기">
+                                        <color key="titleColor" red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    </state>
+                                    <connections>
+                                        <action selector="cancel:" destination="nfc-gm-9RL" eventType="touchUpInside" id="M9F-a7-OcJ"/>
+                                    </connections>
+                                </button>
+                            </subviews>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="110" id="UWo-Lr-LOC"/>
+                            </constraints>
+                        </stackView>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Dying Light" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="11" translatesAutoresizingMaskIntoConstraints="NO" id="le8-0j-l39">
+                            <rect key="frame" x="10" y="65" width="284" height="25.5"/>
+                            <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="21"/>
+                            <nil key="textColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JEh-Nl-NsV" customClass="CosmosView" customModule="Cosmos">
+                            <rect key="frame" x="42" y="132" width="220" height="43"/>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="rating">
+                                    <real key="value" value="2.5"/>
+                                </userDefinedRuntimeAttribute>
+                                <userDefinedRuntimeAttribute type="number" keyPath="totalStars">
+                                    <integer key="value" value="5"/>
+                                </userDefinedRuntimeAttribute>
+                                <userDefinedRuntimeAttribute type="image" keyPath="filledImage" value="ic_star_fill"/>
+                                <userDefinedRuntimeAttribute type="image" keyPath="emptyImage" value="ic_star_empty"/>
+                                <userDefinedRuntimeAttribute type="boolean" keyPath="updateOnTouch" value="YES"/>
+                                <userDefinedRuntimeAttribute type="number" keyPath="starSize">
+                                    <real key="value" value="40"/>
+                                </userDefinedRuntimeAttribute>
+                                <userDefinedRuntimeAttribute type="number" keyPath="fillMode">
+                                    <integer key="value" value="1"/>
+                                </userDefinedRuntimeAttribute>
+                                <userDefinedRuntimeAttribute type="number" keyPath="minTouchRating">
+                                    <real key="value" value="0.5"/>
+                                </userDefinedRuntimeAttribute>
+                                <userDefinedRuntimeAttribute type="number" keyPath="starMargin">
+                                    <real key="value" value="5"/>
+                                </userDefinedRuntimeAttribute>
+                                <userDefinedRuntimeAttribute type="number" keyPath="filledBorderWidth">
+                                    <real key="value" value="0.0"/>
+                                </userDefinedRuntimeAttribute>
+                                <userDefinedRuntimeAttribute type="number" keyPath="textSize">
+                                    <real key="value" value="0.0"/>
+                                </userDefinedRuntimeAttribute>
+                                <userDefinedRuntimeAttribute type="number" keyPath="emptyBorderWidth">
+                                    <real key="value" value="0.0"/>
+                                </userDefinedRuntimeAttribute>
+                                <userDefinedRuntimeAttribute type="color" keyPath="filledColor">
+                                    <color key="value" red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
+                        </view>
+                    </subviews>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstAttribute="trailing" secondItem="4Va-TA-4Uv" secondAttribute="trailing" constant="15" id="Ey1-C5-Yuv"/>
+                        <constraint firstAttribute="bottom" secondItem="4Va-TA-4Uv" secondAttribute="bottom" constant="15" id="O5y-I1-n3b"/>
+                        <constraint firstItem="le8-0j-l39" firstAttribute="centerX" secondItem="a2T-Cm-nzM" secondAttribute="centerX" id="Rhk-z7-SDh"/>
+                        <constraint firstItem="4Va-TA-4Uv" firstAttribute="top" secondItem="JEh-Nl-NsV" secondAttribute="bottom" constant="30" id="U5S-2E-l23"/>
+                        <constraint firstItem="JEh-Nl-NsV" firstAttribute="centerX" secondItem="a2T-Cm-nzM" secondAttribute="centerX" id="ZP0-nH-6HF"/>
+                        <constraint firstItem="4Va-TA-4Uv" firstAttribute="leading" secondItem="a2T-Cm-nzM" secondAttribute="leading" constant="15" id="cBY-2v-9cn"/>
+                        <constraint firstItem="le8-0j-l39" firstAttribute="leading" secondItem="a2T-Cm-nzM" secondAttribute="leading" constant="10" id="fhh-Dt-LRY"/>
+                        <constraint firstAttribute="trailing" secondItem="le8-0j-l39" secondAttribute="trailing" constant="10" id="qb4-ia-M0g"/>
+                        <constraint firstItem="le8-0j-l39" firstAttribute="top" secondItem="a2T-Cm-nzM" secondAttribute="top" constant="65" id="vwb-Fp-95j"/>
+                    </constraints>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                            <integer key="value" value="5"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                </view>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="게임을 평가해 주세요" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="670-co-OcL">
+                    <rect key="frame" x="104.5" y="158.5" width="141.5" height="20.5"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <color key="textColor" red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="RtE-wB-iyI">
+                    <rect key="frame" x="125" y="10" width="100" height="100"/>
+                    <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="100" id="cnb-oM-ekz"/>
+                        <constraint firstAttribute="width" constant="100" id="hfk-UV-Y2I"/>
+                    </constraints>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                            <integer key="value" value="50"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                </imageView>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="670-co-OcL" firstAttribute="top" secondItem="le8-0j-l39" secondAttribute="bottom" constant="8" id="HKi-V0-RrG"/>
+                <constraint firstItem="JEh-Nl-NsV" firstAttribute="top" secondItem="670-co-OcL" secondAttribute="bottom" constant="13" id="Oqg-rE-rFa"/>
+                <constraint firstItem="a2T-Cm-nzM" firstAttribute="centerX" secondItem="nfc-gm-9RL" secondAttribute="centerX" id="XDR-ZB-JBM"/>
+                <constraint firstItem="a2T-Cm-nzM" firstAttribute="centerX" secondItem="nfc-gm-9RL" secondAttribute="centerX" id="ZAU-mD-fss"/>
+                <constraint firstItem="a2T-Cm-nzM" firstAttribute="top" secondItem="RtE-wB-iyI" secondAttribute="bottom" constant="-50" id="asr-LQ-Axw"/>
+                <constraint firstItem="670-co-OcL" firstAttribute="centerX" secondItem="nfc-gm-9RL" secondAttribute="centerX" id="csd-vC-iYr"/>
+                <constraint firstItem="a2T-Cm-nzM" firstAttribute="leading" secondItem="nfc-gm-9RL" secondAttribute="leading" constant="23" id="fUf-Ht-xyq"/>
+                <constraint firstAttribute="bottom" secondItem="a2T-Cm-nzM" secondAttribute="bottom" constant="20" id="fUz-Bq-bE8"/>
+                <constraint firstAttribute="trailing" secondItem="a2T-Cm-nzM" secondAttribute="trailing" constant="23" id="i24-Nr-ekG"/>
+                <constraint firstItem="RtE-wB-iyI" firstAttribute="centerX" secondItem="nfc-gm-9RL" secondAttribute="centerX" id="rrp-S2-MuP"/>
+                <constraint firstItem="a2T-Cm-nzM" firstAttribute="top" secondItem="nfc-gm-9RL" secondAttribute="top" constant="60" id="t0R-P2-dd2"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <viewLayoutGuide key="safeArea" id="W1E-EY-t8Y"/>
+            <connections>
+                <outlet property="image" destination="RtE-wB-iyI" id="aHM-kN-lyh"/>
+                <outlet property="name" destination="le8-0j-l39" id="0MF-OI-95Q"/>
+                <outlet property="star" destination="JEh-Nl-NsV" id="yYj-IN-JL2"/>
+            </connections>
+            <point key="canvasLocation" x="-987.20000000000005" y="343.62818590704649"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="ic_star_empty" width="384" height="384"/>
+        <image name="ic_star_fill" width="384" height="384"/>
+    </resources>
+</document>

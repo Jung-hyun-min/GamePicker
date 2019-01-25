@@ -1,340 +1,174 @@
 import UIKit
-import Alamofire
 import SwiftyJSON
+import Alamofire
 
 class Post_read: UIViewController,UITableViewDelegate,UITableViewDataSource {
+    @IBOutlet var stack_view: UIStackView! // 전체 스택 뷰
+    @IBOutlet var post_view: UIView!
+    @IBOutlet var comment_view: UIView!
+    @IBOutlet var comment_table: UITableView!
+    @IBOutlet var comment_write_view: UIView!
     
-    @IBOutlet var table: UITableView!
-    
+    @IBOutlet var post_title: UILabel!
     @IBOutlet var name: UILabel!
-    @IBOutlet var update: UILabel!
-    @IBOutlet var contents: UILabel!
-    @IBOutlet var topic: UILabel!
-    @IBOutlet var recommend: UILabel!
-    @IBOutlet var disrecommend: UILabel!
+    @IBOutlet var value: UILabel!
+    @IBOutlet var updated_at: UILabel!
+    @IBOutlet var recommends: UILabel!
+    @IBOutlet var comments_1: UILabel!
+    @IBOutlet var comments_2: UILabel!
+    @IBOutlet var views: UILabel!
+    @IBOutlet var disrecommend_but: UIButton!
+    @IBOutlet var recommend_but: UIButton!
+    @IBOutlet var user_name: UILabel!
     
-    @IBOutlet var user_message: UILabel!
+    @IBOutlet var comment_table_height: NSLayoutConstraint!
     
+    // 게시글 identifier
     var post_id : Int = 0
     
-    lazy var comment : [Comment_VO] = {
+    lazy var comment_arr : [Comment_VO] = {
         var datalist = [Comment_VO]()
         return datalist
     }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        get_post()
-        get_post_comment()
+        
+        // 댓글에 유저 이름 추가
+        user_name.text = UserDefaults.standard.string(forKey: data.user.name)
+        // 그림자 추가
+        //post_view.dropShadow()
+        
+        // 스택뷰 로딩 전까지 hidden
+        stack_view.isHidden = true
+        
+        // 추천 비추천 버튼 경계 색 추가
+        disrecommend_but.layer.borderColor = UIColor(red:0.87, green:0.87, blue:0.87, alpha:1.0).cgColor
+        recommend_but.layer.borderColor  = UIColor(red:0.87, green:0.87, blue:0.87, alpha:1.0).cgColor
+        comment_write_view.layer.borderColor  = UIColor(red:0.87, green:0.87, blue:0.87, alpha:1.0).cgColor
+        
+        // post id 판별
+        switch post_id {
+        case 0: showalert(message: "게시글 읽기 오류", can: 0)
+        default:
+            get_post()
+            get_post_comment()
+            break
+        }
     }
     
+    // 게시글 get
     func get_post() {
         Alamofire.request(Api.url + "posts/\(post_id)").responseJSON { (response) in
             if response.result.isSuccess {
                 let json = JSON(response.result.value!)
-                let status = json["status"].stringValue
-                print(response.result.value!)
-                if status == "success" {
-                    self.name.text = json["data"]["name"].stringValue
-                    self.update.text = json["data"]["update_date"].stringValue
-                    self.contents.text = json["data"]["content"].stringValue
-                    self.topic.text = json["data"]["title"].stringValue
-                    self.recommend.text = "\(json["data"]["recommend"].intValue)추"
-                    self.disrecommend.text = "\(json["data"]["disrecommend"].intValue)비추"
+                
+                if response.response?.statusCode == 200 {
+                    self.post_title.text = json["post"]["title"].stringValue
+                    
+                    self.value.text      = json["post"]["value"].stringValue
+                    self.name.text       = json["post"]["name"].stringValue
+                    self.recommends.text = json["post"]["recommends"].stringValue
+                    self.views.text      = json["post"]["views"].stringValue
+                    
+                    let dateFormatter = DateFormatter()
+                    dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+                    let str = json["post"]["updated_at"].stringValue
+                    let date = dateFormatter.date(from: String(str.prefix(19)))
+                    self.updated_at.text = date?.relativeTime
+    
+                    
+                    self.recommend_but.setTitle(json["post"]["recommends"].stringValue, for: .normal)
+                    self.disrecommend_but.setTitle(json["post"]["disrecommends"].stringValue, for: .normal)
+                    
+                    self.stack_view.isHidden = false
+                    
+                } else if response.response?.statusCode ?? 0 < 500 {
+                    self.showalert(message: json["message"].stringValue, can: 0)
+                } else {
+                    self.showalert(message: "서버 오류", can: 0)
                 }
             } else {
-                self.showalert(message: "게시글 데이터 API 오류\n" + response.result.debugDescription, can: 0)
+                self.showalert(message: "서버 응답 오류", can: 0)
             }
         }
     }
     
+    // 게시글 댓글 get
     func get_post_comment() {
         Alamofire.request(Api.url + "posts/\(post_id)/comments").responseJSON { (response) in
             if response.result.isSuccess {
-                // 성공 했을 때
-                if (response.result.value) != nil {
-                    let json = JSON(response.result.value!)
+                let json = JSON(response.result.value!)
+                if response.response?.statusCode == 200 {
+                    let comments = json["comments"].arrayValue
                     
-                    if json["data"]["count"].intValue == 0 {
-                        self.user_message.text = "아직 댓글이 없습니다."
-                        return
+                    switch comments.count {
+                    case 0:
+                        self.comment_table.isHidden = true
+                        self.comments_1.text = "0"
+                        self.comments_2.text = "0"
+                    default:
+                        self.comments_1.text = String(comments.count)
+                        self.comments_2.text = String(comments.count)
+                        for subjson in comments {
+                            let comment = Comment_VO()
+                            comment.comment_id    = subjson["id"].intValue
+                            comment.comment_value = subjson["value"].stringValue
+                            comment.recommends    = subjson["recommends"].intValue
+                            comment.disrecommends = subjson["disrecommends"].intValue
+                            comment.updated_at    = subjson["updated_at"].stringValue
+                            comment.user_name     = subjson["name"].stringValue
+                            comment.user_id       = subjson["user_id"].stringValue
+                            
+                            self.comment_arr.append(comment)
+                        }
+                        self.comment_table.reloadData()
                     }
-                    
-                    for (_,subJson):(String, JSON) in json["data"]["comments"] {
-                        let id = subJson["id"].intValue
-                        let value = subJson["value"].stringValue
-                        let update_date = subJson["update_date"].stringValue
-                        let name = subJson["name"].stringValue
-                        
-                        let com = Comment_VO()
-                        
-                        com.id = id
-                        com.value = value
-                        com.update_date = update_date
-                        com.name = name
-                        
-                        self.comment.append(com)
-                    }
-                    self.table.reloadData()
-                    
+                } else if response.response?.statusCode ?? 0 < 500 {
+                    self.showalert(message: json["message"].stringValue, can: 0)
                 } else {
-                    self.showalert(message: "코멘트 데이터 조회 API 오류",can: 0)
+                    self.showalert(message: "서버 오류", can: 0)
                 }
             } else {
-                self.showalert(message: "코멘트 데이터 조회 네트워크(time) 오류",can: 0)
+                self.showalert(message: "서버 응답 오류", can: 0)
             }
         }
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return comment.count
+        return comment_arr.count
+    }
+    
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if indexPath.row == tableView.numberOfRows(inSection: 0) - 1 {
+            // 마지막 셀 로드 완료 했을때
+            comment_table_height.constant = (tableView.contentSize.height + 30)
+        }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let comment = tableView.dequeueReusableCell(withIdentifier: "comment", for: indexPath) as! Comment_cell
-        let row = self.comment[indexPath.row]
+        let comment_cell = tableView.dequeueReusableCell(withIdentifier: "comment", for: indexPath) as! Comment_cell
         
-        comment.name.text = row.name
-        comment.value.text = row.value
-        comment.date.text = row.update_date
+        let row = self.comment_arr[indexPath.row]
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+        let str: String = row.updated_at!
+        let date = dateFormatter.date(from: String(str.prefix(19)))
+        comment_cell.date.text = date?.relativeTime
+        comment_cell.name.text = row.user_name
+        comment_cell.value.text = row.comment_value
+        
+        comment_cell.score.text = "\(row.recommends! - row.disrecommends!)"
         
         
-        return comment
+        return comment_cell
     }
     
-    @objc func comment_alert_1(sender : UIButton) {
-        let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-        let delete = UIAlertAction(title: "삭제", style: .default) {
-            (result:UIAlertAction) -> Void in
-            self.comment_alert_2(id: sender.tag,which: 1)
-        }
-        let modify = UIAlertAction(title: "수정", style: .default) {
-            (result:UIAlertAction) -> Void in
-            self.comment_alert_2(id : sender.tag,which: 2)
-        }
-        let singo = UIAlertAction(title: "신고", style: .default) {
-            (result:UIAlertAction) -> Void in
-            self.showalert(message: "준비중인 기능입니다",can: 1)
-        }
-        let cancel = UIAlertAction(title: "취소", style: .cancel)
-        alert.addAction(delete)
-        alert.addAction(modify)
-        alert.addAction(singo)
-        alert.addAction(cancel)
-        self.present(alert,animated: true)
-        return
+    @IBAction func recommend(_ sender: Any) {
+        // 추천
     }
     
-    func comment_alert_2(id : Int, which : Int) {
-        var message : String = ""
-        
-        if which == 1 {
-            message = "댓글을 삭제하십니까?"
-        } else {
-            message = ""
-        }
-        
-        let alert = UIAlertController(title: "댓글", message: message, preferredStyle: .alert)
-        
-        let delete = UIAlertAction(title: "삭제", style: .destructive) {
-            (result:UIAlertAction) -> Void in
-            self.delete_post_comment(comment_id: id)
-        }
-        
-        let modify = UIAlertAction(title: "수정", style: .destructive) {
-            (result:UIAlertAction) -> Void in
-            let modify_field = alert.textFields![0]
-            
-            if modify_field.text == "" {
-                alert.message = "수정값이 공백입니다."
-            } else {
-                self.modify_post_comment(comment_id: id,text: modify_field.text ?? "")
-            }
-        }
-        
-        let cancel = UIAlertAction(title: "취소", style: .cancel)
-        
-        if which == 1 {
-            alert.addAction(delete)
-        } else {
-            alert.addTextField { (field) in
-                field.placeholder = "수정할 댓글을 입력하세요."
-            }
-            alert.addAction(modify)
-        }
-        
-        alert.addAction(cancel)
-        self.present(alert,animated: true)
-        return
+    @IBAction func disrecommend(_ sender: Any) {
+        // 비추천
     }
-    
-    // 게시글 댓글 삭제
-    func delete_post_comment(comment_id : Int) {
-        let heads: [String : String] = [
-            "x-access-token" : UserDefaults.standard.string(forKey: "User_token") ?? ""
-        ]
-
-        Alamofire.request(Api.url + "posts/\(post_id)/comments/\(comment_id)", method: .delete, headers : heads).responseJSON {(response) in
-            if response.result.isSuccess {
-                let json = JSON(response.result.value!)
-                let status = json["status"].stringValue
-                print(json)
-                if status == "success" {
-                    self.comment.removeAll()
-                    self.get_post_comment()
-                } else {
-                    self.showalert(message: "댓글 삭제 오류\n" + json["data"].stringValue,can: 1)
-                }
-            } else {
-                self.showalert(message: response.result.debugDescription,can: 0)
-            }
-        }
-    }
-    
-    // 게시글 댓글 수정
-    func modify_post_comment(comment_id : Int,text : String) {
-        let heads: [String: String] = [
-            "x-access-token" : UserDefaults.standard.string(forKey: "User_token") ?? ""
-        ]
-        
-        let params: [String: String] = [
-            "value" : text
-        ]
-
-        Alamofire.request(Api.url + "posts/\(post_id)/comments/\(comment_id)", method: .put, parameters: params, headers: heads).responseJSON {(response) in
-            if response.result.isSuccess {
-                let json = JSON(response.result.value!)
-                let status = json["status"].stringValue
-                if status == "success" {
-                    print(response.result.value!)
-                    self.comment.removeAll()
-                    self.get_post_comment()
-                } else {
-                    self.showalert(message: "댓글 수정 오류\n" + json["data"].stringValue,can: 0)
-                }
-            } else {
-                self.showalert(message: "comment data time error\n" + response.result.description,can: 0)
-            }
-        }
-    }
-    
-    // 게시글 댓글 삭제
-    @IBAction func recommend_post(_ sender: Any) {
-        let heads: [String : String] = [
-            "x-access-token" : UserDefaults.standard.string(forKey: "User_token") ?? ""
-        ]
-
-        Alamofire.request(Api.url + "posts/\(post_id)/recommend", method: .post, headers : heads).responseJSON {(response) in
-            if response.result.isSuccess {
-                let json = JSON(response.result.value!)
-                let status = json["status"].stringValue
-                print(json)
-                if status == "success" {
-                    self.showalert(message: "추천 되었습니다.", can: 1)
-                    self.view.setNeedsLayout()
-                } else {
-                    self.showalert(message: "추천 오류\n" + json["data"].stringValue,can: 1)
-                }
-            } else {
-                self.showalert(message: response.result.debugDescription,can: 0)
-            }
-        }
-    }
-    
-    @IBAction func disrecommend_post(_ sender: Any) {
-        let heads: [String : String] = [
-            "x-access-token" : UserDefaults.standard.string(forKey: "User_token") ?? ""
-        ]
-
-        Alamofire.request(Api.url + "posts/\(post_id)/disrecommend", method: .post, headers : heads).responseJSON {(response) in
-            if response.result.isSuccess {
-                let json = JSON(response.result.value!)
-                let status = json["status"].stringValue
-                print(json)
-                if status == "success" {
-                    self.view.setNeedsLayout()
-                } else {
-                    self.showalert(message: "추천 오류\n" + json["data"].stringValue,can: 1)
-                }
-            } else {
-                self.showalert(message: response.result.debugDescription,can: 0)
-            }
-        }
-    }
-    
-    @IBAction func more(_ sender: Any) {
-        let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-        let delete = UIAlertAction(title: "삭제", style: .default) {
-            (result:UIAlertAction) -> Void in
-            
-        }
-        let modify = UIAlertAction(title: "수정", style: .default) {
-            (result:UIAlertAction) -> Void in
-            
-        }
-        let singo = UIAlertAction(title: "신고", style: .default) {
-            (result:UIAlertAction) -> Void in
-            self.showalert(message: "준비중인 기능입니다",can: 1)
-        }
-        let cancel = UIAlertAction(title: "취소", style: .cancel)
-        alert.addAction(delete)
-        alert.addAction(modify)
-        alert.addAction(singo)
-        alert.addAction(cancel)
-        self.present(alert,animated: true)
-        return
-    }
-    /*
-    func delete_post(_id : Int) {
-        let heads: [String : String] = [
-            "x-access-token" : UserDefaults.standard.string(forKey: "User_token") ?? ""
-        ]
-        let url = api.pre + "games/\(id)/comments/\(comment_id)"
-        
-        Alamofire.request(url, method: .delete, headers : heads).responseJSON {(response) in
-            if response.result.isSuccess {
-                let json = JSON(response.result.value!)
-                let status = json["status"].stringValue
-                print(json)
-                if status == "success" {
-                    self.comment.removeAll()
-                    self.get_game_comment()
-                } else {
-                    self.showalert(message: "댓글 삭제 오류\n" + json["data"].stringValue,can: 1)
-                }
-            } else {
-                self.showalert(message: response.result.debugDescription,can: 0)
-            }
-        }
-    }
- 
-    // 게임 댓글 수정
-    func modify_(comment_id : Int,text : String) {
-        let heads: [String: String] = [
-            "x-access-token" : UserDefaults.standard.string(forKey: "User_token") ?? ""
-        ]
-        
-        let params: [String: String] = [
-            "value" : text
-        ]
-        
-        //let url = api.pre + "games/\(id)/comments/\(comment_id)"
-        
-        Alamofire.request(url, method: .put, parameters: params, headers: heads).responseJSON {(response) in
-            if response.result.isSuccess {
-                let json = JSON(response.result.value!)
-                let status = json["status"].stringValue
-                if status == "success" {
-                    print(response.result.value!)
-                    self.comment.removeAll()
-                    self.get_game_comment()
-                } else {
-                    self.showalert(message: "댓글 수정 오류\n" + json["data"].stringValue,can: 0)
-                }
-            } else {
-                self.showalert(message: "comment data time error\n" + response.result.description,can: 0)
-            }
-        }
-    }
-    */
 }

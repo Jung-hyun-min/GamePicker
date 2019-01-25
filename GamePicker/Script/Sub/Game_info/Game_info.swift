@@ -10,6 +10,10 @@ class Game_info: UIViewController,UITableViewDelegate,UITableViewDataSource {
     @IBOutlet var const_1: NSLayoutConstraint!
     @IBOutlet var const_2: NSLayoutConstraint!
     
+    @IBOutlet var community: UIStackView!
+    @IBOutlet var score: UIStackView!
+    @IBOutlet var favorite: UIStackView!
+    
     @IBOutlet var image: UIImageView!
     @IBOutlet var name: UILabel!
     @IBOutlet var rate: UILabel!
@@ -27,9 +31,7 @@ class Game_info: UIViewController,UITableViewDelegate,UITableViewDataSource {
     
     @IBOutlet var comment_table: UITableView!
 
-    var id : Int = 0
-    
-    var comment_number : Int = 0
+    var game_id : Int = 0
     
     lazy var comment : [Comment_VO] = {
         var datalist = [Comment_VO]()
@@ -40,8 +42,36 @@ class Game_info: UIViewController,UITableViewDelegate,UITableViewDataSource {
         super.viewDidLoad()
         comment.removeAll()
         
+        get_check_favor()
         get_game()
         //get_reviews()
+        
+        let gesture_1 = UITapGestureRecognizer(target: self, action: #selector(favorite_a))
+        let gesture_2 = UITapGestureRecognizer(target: self, action: #selector(score_a))
+        let gesture_3 = UITapGestureRecognizer(target: self, action: #selector(community_a))
+        
+        favorite.addGestureRecognizer(gesture_1)
+        score.addGestureRecognizer(gesture_2)
+        community.addGestureRecognizer(gesture_3)
+    }
+    
+    @objc func favorite_a() {
+        custom_alert.red_alert(text: "찜했습니다.")
+    }
+    
+    @objc func score_a() {
+        custom_alert.score_alert(id: game_id, title: name.text!, image: image!.image ?? UIImage(named: "picture")!)
+    }
+    
+    @objc func community_a() {
+        performSegue(withIdentifier: "posts", sender: self)
+    }
+    
+    // 게임 상세보기 뷰 prepare
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let param = segue.destination as! Post
+        param.game_id = game_id
+        param.game_title = name.text!
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -52,9 +82,9 @@ class Game_info: UIViewController,UITableViewDelegate,UITableViewDataSource {
         let comment_cell = tableView.dequeueReusableCell(withIdentifier: "comment", for: indexPath) as! Comment_cell
         let row = comment[indexPath.row]
         
-        comment_cell.value.text = row.value
-        comment_cell.name.text = row.name
-        comment_cell.date.text = row.update_date
+        comment_cell.value.text = row.comment_value
+        comment_cell.name.text = row.user_name
+        comment_cell.date.text = row.updated_at
         
         return comment_cell
     }
@@ -69,7 +99,7 @@ class Game_info: UIViewController,UITableViewDelegate,UITableViewDataSource {
     }
     
     func get_game() {
-        Alamofire.request(Api.url + "games/\(id)").responseJSON { (response) in
+        Alamofire.request(Api.url + "games/\(game_id)").responseJSON { (response) in
             if response.result.isSuccess {
                 let json = JSON(response.result.value!)
                 if response.response?.statusCode == 200 {
@@ -85,7 +115,7 @@ class Game_info: UIViewController,UITableViewDelegate,UITableViewDataSource {
                     if score_count == 0 {
                         self.rate.text = "아직 평가되지 않았습니다."
                     } else {
-                        self.rate.text = "평점: \(round(score*10)/10)(\(score_count)명)"
+                        self.rate.text = "평점: \(round(score*10)/10) (\(score_count) 명)"
                     }
                     
                     // 이미지
@@ -95,7 +125,7 @@ class Game_info: UIViewController,UITableViewDelegate,UITableViewDataSource {
                         options: [
                             .processor(DownsamplingImageProcessor(size: CGSize(width: 400, height: 300))),
                             .scaleFactor(UIScreen.main.scale),
-                            .transition(.fade(0.3)),
+                            .transition(.fade(0.3))
                             ])
                     
                     // 비디오
@@ -123,10 +153,9 @@ class Game_info: UIViewController,UITableViewDelegate,UITableViewDataSource {
     }
     
     func get_reviews() {
-        Alamofire.request(Api.url + "games/\(id)/reviews").responseJSON { (response) in
+        Alamofire.request(Api.url + "games/\(game_id)/reviews").responseJSON { (response) in
             if response.result.isSuccess {
                 let json = JSON(response.result.value!)
-                self.comment_number = json["review"].intValue
                 
                 for (_,subJson):(String, JSON) in json["data"]["comments"] {
                     let id = subJson["id"].intValue
@@ -134,14 +163,14 @@ class Game_info: UIViewController,UITableViewDelegate,UITableViewDataSource {
                     let update_date = subJson["update_date"].stringValue
                     let name = subJson["name"].stringValue
                     
-                    let com = Comment_VO()
+                    let comment = Comment_VO()
                     
-                    com.id = id
-                    com.value = value
-                    com.update_date = update_date
-                    com.name = name
+                    comment.comment_id = id
+                    comment.comment_value = value
+                    comment.updated_at = update_date
+                    comment.user_name = name
                     
-                    self.comment.append(com)
+                    self.comment.append(comment)
                 }
             } else {
                 self.showalert(message: "코멘트 데이터 조회 네트워크(time) 오류", can: 0)
@@ -149,4 +178,29 @@ class Game_info: UIViewController,UITableViewDelegate,UITableViewDataSource {
         }
     }
     
+    func get_check_favor() {
+        let header: [String : String] = [
+            "x-access-token" : UserDefaults.standard.string(forKey: data.user.token) ?? ""
+        ]
+        
+        Alamofire.request(Api.url + "games/\(game_id)/favor",headers: header).responseJSON { (response) in
+            if response.result.isSuccess {
+                let json = JSON(response.result.value!)
+                if response.response?.statusCode == 200 {
+                    if json["favor"].boolValue {
+                        print("a")
+                    } else {
+                        print("b")
+                    }
+                } else if response.response?.statusCode ?? 0 < 500 {
+                    self.showalert(message: json["message"].stringValue, can: 0)
+                } else {
+                    self.showalert(message: "서버 오류", can: 0)
+                }
+            } else {
+                self.showalert(message: "서버 응답 오류", can: 0)
+            }
+        }
+    }
+
 }

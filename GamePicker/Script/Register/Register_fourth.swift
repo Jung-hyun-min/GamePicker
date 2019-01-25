@@ -16,20 +16,16 @@ class Register_fourth: UIViewController {
     var birth : String = ""
     var gender : String = ""
     
+    var isSucces:Bool = false
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         addToolBar(textField: name_field, title: "회원가입")
-        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
-        self.navigationController?.navigationBar.shadowImage = UIImage()
-        
-        complete.backgroundColor = UIColor(red:0.80, green:0.80, blue:0.80, alpha:1.0)
-        
-        warn_text.isHidden = true
-        warn_stack.isHidden = true
-        
-        complete.layer.cornerRadius = 6
-        
-        self.view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(endEditing)))
+        hideKeyboard_tap()
+    }
+    
+    override func barPressed() {
+        complete(self)
     }
     
     @IBAction func cancel(_ sender: Any) {
@@ -50,29 +46,32 @@ class Register_fourth: UIViewController {
     }
     
     @IBAction func complete(_ sender: Any) {
-        if name_field.text == "" {
+        if name_field.text!.isEmpty {
             warn_text.isHidden = false
             warn_stack.isHidden = false
-            warn_text.text = "어떤 글자라도 입력해주세요."
+            warn_text.text = "어떤 글자라도 입력하세요."
             return
-        }
-        if name_field.text!.count > 10 {
+        } else if name_field.text!.count > 10 {
             warn_text.isHidden = false
             warn_stack.isHidden = false
-            warn_text.text = "10자 이내로 설정해주세요."
+            warn_text.text = "10자 이내로 설정하세요."
             return
-        }
-        if name_field.text!.count < 3 {
+        } else if name_field.text!.count < 2 {
             warn_text.isHidden = false
             warn_stack.isHidden = false
-            warn_text.text = "더 긴 이름을 입력해주세요."
+            warn_text.text = "더 긴 이름을 입력하세요."
             return
         }
-        post_register()
-    }
-    
-    @objc func endEditing() {
-        name_field.resignFirstResponder()
+        get_name_isOverlap() { result in
+            if result {
+                // 이름 중복 체크
+                self.warn_text.isHidden = false
+                self.warn_stack.isHidden = false
+                self.warn_text.text = "이미 존재하는 닉네임 입니다."
+            } else {
+                //self.post_register()
+            }
+        }
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -81,17 +80,23 @@ class Register_fourth: UIViewController {
     }
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        if textField.text != "" {
-            complete.backgroundColor = UIColor(red:0.91, green:0.08, blue:0.41, alpha:1.0)
-            warn_stack.isHidden = true
-        }
         guard let text = textField.text else { return true }
         let newLength = text.count + string.count - range.length
+        if newLength == 0 {
+            complete.backgroundColor = UIColor(red:0.87, green:0.87, blue:0.87, alpha:1.0)
+            complete.isEnabled = false
+        } else {
+            complete.backgroundColor = UIColor(red:0.91, green:0.08, blue:0.41, alpha:1.0)
+            complete.isEnabled = true
+        }
         return newLength <= 11
     }
     
     func textFieldDidEndEditing(_ textField: UITextField) {
-        name_under.backgroundColor = UIColor(red:0.80, green:0.80, blue:0.80, alpha:1.0)
+        name_under.backgroundColor = UIColor(red:0.87, green:0.87, blue:0.87, alpha:1.0)
+        if name_field!.text == "\u{C190} \u{D76C} \u{C5F0}" {
+            textField.text?.append("\u{1F496}")
+        }
     }
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
@@ -104,19 +109,19 @@ class Register_fourth: UIViewController {
             "name" : name_field.text ?? "",
             "password" : password,
             "birthday" : birth,
-            "gender" : "M"
+            "gender" : gender
         ]
         
         Alamofire.request(Api.url + "auth/register", method: .post, parameters: parameters).responseJSON { (response) in
             if response.result.isSuccess {
                 let json = JSON(response.result.value!)
                 if response.response?.statusCode == 200 {
-                    print(json)
+                    self.isSucces = true
                     self.complete_register()
                 } else if response.response?.statusCode ?? 0 < 500 {
-                    self.showalert(message: json["message"].stringValue, can: 0)
+                    self.showalert(message: json["message"].stringValue, can: 1)
                 } else {
-                    self.showalert(message: "서버 오류", can: 0)
+                    self.showalert(message: "서버 오류", can: 1)
                 }
             } else {
                 self.showalert(message: "서버 응답 오류", can: 0)
@@ -128,9 +133,10 @@ class Register_fourth: UIViewController {
         let alert = UIAlertController(title: nil, message: "회원가입 완료", preferredStyle: .alert)
         let ok = UIAlertAction(title: "로그인", style: .default) {
             (result:UIAlertAction) -> Void in
-            self.presentingViewController?.dismiss(animated: true)
-            let chk = UIApplication.shared.delegate as? AppDelegate
-            chk?.check = 1
+            weak var pvc = self.presentingViewController
+            self.presentingViewController?.dismiss(animated: true) {
+                pvc?.performSegue(withIdentifier: "login", sender: self)
+            }
         }
         alert.addAction(ok)
         
@@ -138,4 +144,31 @@ class Register_fourth: UIViewController {
         return
     }
     
+    override func viewDidDisappear(_ animated: Bool) {
+        if isSucces {
+            //Logout().direct_login()
+        }
+    }
+    
+    func get_name_isOverlap(completionHandler : @escaping (Bool) -> Void ) {
+        let urlstr = Api.url + "users?name=" + name_field.text!
+        let encoded = urlstr.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
+        
+        Alamofire.request(URL(string: encoded)!).responseJSON { (response) in
+            if response.result.isSuccess {
+                let json = JSON(response.result.value ?? "")
+                if response.response?.statusCode == 200 {
+                    let arr = json["users"].arrayValue
+                    if arr.count == 1 {
+                        completionHandler(true)
+                    }
+                } else {
+                    self.showalert(message: "서버 오류", can: 0)
+                }
+            } else {
+                self.showalert(message: "서버 응답 오류", can: 0)
+            }
+        }
+        completionHandler(false)
+    }
 }

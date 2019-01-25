@@ -30,80 +30,79 @@ extension UIViewController {
     func showalert(message : String, can : Int) {
         let alert = UIAlertController(title: "알림", message: message, preferredStyle: .alert)
         let ok = UIAlertAction(title: "확인", style: .default) {
-            (result:UIAlertAction) -> Void in
+            (result: UIAlertAction) -> Void in
             self.navigationController?.popViewController(animated: true)
         }
         let cancel = UIAlertAction(title: "확인", style: .cancel)
-        if can == 0 { // 0 이면 뒤로가기 추가
-            alert.addAction(ok)
-        } else { // 1 이면 뒤로 가기 없음
-            alert.addAction(cancel)
+        switch can {
+        case 0: alert.addAction(ok) // 0 이면 뒤로가기 추가
+        case 1: alert.addAction(cancel) // 1 이면 뒤로 가기 없음
+        default: break
         }
         self.present(alert,animated: true)
-        return
-    
     }
     
     func navigation_icon() {
-        let logo = UIImage(named: "img_logo_thumb")!
-        let alarm = UIImage(named: "ic_alarm")!
-        let message = UIImage(named: "ic_message")!
-        let search = UIImage(named: "ic_search")!
-        
         let logo_but: UIButton = UIButton.init(type: .custom)
-        logo_but.setImage(logo, for: UIControl.State.normal)
+        logo_but.setImage(UIImage(named: "img_logo_thumb")!, for: UIControl.State.normal)
         logo_but.addTarget(self, action: #selector(self.navi_logo), for: UIControl.Event.touchUpInside)
-        logo_but.frame = CGRect(x: 0, y: 0, width: 40, height: 40)
+        logo_but.frame = CGRect(x: 0, y: 0, width: 25, height: 40)
         let logo_item = UIBarButtonItem(customView: logo_but)
         
-        let title_txt: UILabel = UILabel.init(frame: CGRect(x: 0, y: 0, width: 380, height: 21))
+        let title_txt: UILabel = UILabel.init()
         title_txt.text = "GAMEPICKER"
         title_txt.textColor = UIColor.white
-        if UIScreen.main.bounds.height <= 568 {
-            title_txt.font = UIFont.boldSystemFont(ofSize: 17)
-        } else {
-            title_txt.font = UIFont.boldSystemFont(ofSize: 21)
-        }
+        title_txt.font = UIFont.boldSystemFont(ofSize: 19)
         title_txt.textAlignment = .center
         let title_item = UIBarButtonItem(customView: title_txt)
         
         let alarm_but: UIButton = UIButton.init(type: .custom)
-        alarm_but.setImage(alarm, for: UIControl.State.normal)
+        alarm_but.setImage(UIImage(named: "ic_alarm")!, for: UIControl.State.normal)
         alarm_but.addTarget(self, action: #selector(self.navi_alarm), for: UIControl.Event.touchUpInside)
-        alarm_but.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
+        alarm_but.frame = CGRect(x: 0, y: 0, width: 35, height: 30)
         let alarm_item = UIBarButtonItem(customView: alarm_but)
         
         let message_but: UIButton = UIButton.init(type: .custom)
-        message_but.setImage(message, for: UIControl.State.normal)
+        message_but.setImage(UIImage(named: "ic_message")!, for: UIControl.State.normal)
         message_but.addTarget(self, action: #selector(self.navi_message), for: UIControl.Event.touchUpInside)
-        message_but.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
+        message_but.frame = CGRect(x: 0, y: 0, width: 35, height: 30)
         let message_item = UIBarButtonItem(customView: message_but)
         
         let search_but: UIButton = UIButton.init(type: .custom)
-        search_but.setImage(search, for: UIControl.State.normal)
+        search_but.setImage(UIImage(named: "ic_search")!, for: UIControl.State.normal)
         search_but.addTarget(self, action: #selector(self.navi_search), for: UIControl.Event.touchUpInside)
-        search_but.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
+        search_but.frame = CGRect(x: 0, y: 0, width: 35, height: 30)
         let search_item = UIBarButtonItem(customView: search_but)
         search_item.tintColor = UIColor.white
         
         self.navigationItem.setRightBarButtonItems([search_item, message_item, alarm_item], animated: false)
         self.navigationItem.setLeftBarButtonItems([logo_item, title_item], animated: false)
     }
-    
+    // 로고 터치
     @objc func navi_logo() {
         print("logo")
     }
+    // 알람 터치
     @objc func navi_alarm() {
         print("alarm")
     }
+    // 메세지 터치
     @objc func navi_message() {
         print("message")
     }
     @objc func navi_search() {
-        guard let uvc = self.storyboard?.instantiateViewController(withIdentifier: "search") else {
-            return
-        }
-        self.navigationController?.pushViewController(uvc, animated: true)
+        let vc = self.instanceMainVC(name: "search")
+        self.navigationController?.pushViewController(vc!, animated: true)
+    }
+    
+    // 키보드 가리기
+    func hideKeyboard_tap() {
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(UIViewController.dismissKeyboard))
+        tap.cancelsTouchesInView = false
+        view.addGestureRecognizer(tap)
+    }
+    @objc func dismissKeyboard() {
+        view.endEditing(true)
     }
 }
 
@@ -119,13 +118,107 @@ extension UIViewController: UITextFieldDelegate {
         let done = UIBarButtonItem(title: title, style: .plain, target: self, action: #selector(barPressed))
         UIBarButtonItem.appearance().setTitleTextAttributes(
             [NSAttributedString.Key.font : UIFont.boldSystemFont(ofSize: 18)], for: .normal)
-        let flexible = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-        
-        toolbar.setItems([flexible, done, flexible], animated: false)
+        done.width = UIScreen.main.bounds.width
+        toolbar.setItems([done], animated: false)
         toolbar.isUserInteractionEnabled = true
         textField.inputAccessoryView = toolbar
     }
+    
     @objc func barPressed(){
-        print("bar")
+        print("bar pressed")
+    }
+}
+
+extension UIView {
+    func shake(_ duration: CFTimeInterval) {
+        let translation = CAKeyframeAnimation(keyPath: "transform.translation.x");
+        translation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.linear)
+        translation.values = [-5, 5, -5, 5, -3, 3, -2, 2, 0]
+        
+        let shakeGroup: CAAnimationGroup = CAAnimationGroup()
+        shakeGroup.animations = [translation]
+        shakeGroup.duration = duration
+        self.layer.add(shakeGroup, forKey: "shakeIt")
+    }
+    
+    // OUTPUT 1
+    func dropShadow(scale: Bool = true) {
+        layer.masksToBounds = false
+        layer.shadowColor = UIColor.black.cgColor
+        layer.shadowOpacity = 0.5
+        layer.shadowOffset = CGSize(width: -1, height: 1)
+        layer.shadowRadius = 2
+        
+        layer.shadowPath = UIBezierPath(rect: bounds).cgPath
+        layer.shouldRasterize = true
+        layer.rasterizationScale = scale ? UIScreen.main.scale : 1
+    }
+}
+
+extension Date {
+    var yearsFromNow:   Int {
+        return Calendar.current.dateComponents([.year],from: self, to: Date()).year ?? 0
+    }
+    var monthsFromNow:  Int {
+        return Calendar.current.dateComponents([.month], from: self, to: Date()).month  ?? 0
+    }
+    var weeksFromNow:   Int {
+        return Calendar.current.dateComponents([.weekOfYear], from: self, to: Date()).weekOfYear ?? 0
+    }
+    var daysFromNow:    Int {
+        return Calendar.current.dateComponents([.day], from: self, to: Date()).day ?? 0
+    }
+    var hoursFromNow:   Int {
+        return Calendar.current.dateComponents([.hour], from: self, to: Date()).hour ?? 0
+    }
+    var minutesFromNow: Int {
+        return Calendar.current.dateComponents([.minute], from: self, to: Date()).minute ?? 0
+    }
+    var secondsFromNow: Int {
+        return Calendar.current.dateComponents([.second], from: self, to: Date()).second ?? 0
+    }
+    
+    var relativeTime: String {
+        if yearsFromNow   > 0 {
+            return "\(yearsFromNow)년 전"
+        }
+        if monthsFromNow  > 0 {
+            return "\(monthsFromNow)달 전"
+        }
+        if weeksFromNow   > 0 {
+            return "\(weeksFromNow)주 전"
+        }
+        if daysFromNow    > 0 {
+            return daysFromNow == 1 ? "어제" : "\(daysFromNow)일 전"
+        }
+        if hoursFromNow   > 0 {
+            return "\(hoursFromNow)시간 전"
+        }
+        if minutesFromNow > 0 {
+            return "\(minutesFromNow)분 전"
+        }
+        if secondsFromNow > 0 {
+            return secondsFromNow < 15 ? "방금전": "\(secondsFromNow)초 전"
+        }
+        return ""
+    }
+}
+
+// userdefault 데이터
+struct data {
+    static let isLogin = "isLogin" // 로그인 했는지 판단 (자동로그인)
+    static let isFirst = "isFirst"    // 어플 첫 실행인지 판단
+    
+    struct user {
+        static let id = "id"
+        static let token = "token"
+        
+        static let name = "name"
+        static let email = "email"
+        static let birthday = "birthday"
+        static let introduce = "introduce"
+        static let gender = "gender"
+        static let points = "points"
+        static let profile = "profile"
     }
 }
