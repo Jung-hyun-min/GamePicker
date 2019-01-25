@@ -25,7 +25,8 @@ class Post_read: UIViewController,UITableViewDelegate,UITableViewDataSource {
     
     // 게시글 identifier
     var post_id : Int = 0
-    
+    // 협업 부분
+    // 1에서 작성
     lazy var comment_arr : [Comment_VO] = {
         var datalist = [Comment_VO]()
         return datalist
