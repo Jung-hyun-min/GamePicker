@@ -26,7 +26,7 @@
                                     <rect key="frame" x="0.0" y="0.0" width="274" height="55"/>
                                     <color key="backgroundColor" red="0.90588235289999997" green="0.078431372550000003" blue="0.41176470590000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     <fontDescription key="fontDescription" type="system" weight="medium" pointSize="16"/>
-                                    <state key="normal" title="평가완료">
+                                    <state key="normal" title="평가하기">
                                         <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </state>
                                     <userDefinedRuntimeAttributes>
@@ -65,7 +65,7 @@
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <userDefinedRuntimeAttributes>
                                 <userDefinedRuntimeAttribute type="number" keyPath="rating">
-                                    <real key="value" value="2.5"/>
+                                    <real key="value" value="0.0"/>
                                 </userDefinedRuntimeAttribute>
                                 <userDefinedRuntimeAttribute type="number" keyPath="totalStars">
                                     <integer key="value" value="5"/>
@@ -127,6 +127,7 @@
                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="RtE-wB-iyI">
                     <rect key="frame" x="125" y="10" width="100" height="100"/>
                     <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <color key="tintColor" red="0.40000000000000002" green="0.40000000000000002" blue="0.40000000000000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="100" id="cnb-oM-ekz"/>
                         <constraint firstAttribute="width" constant="100" id="hfk-UV-Y2I"/>

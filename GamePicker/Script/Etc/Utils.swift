@@ -2,12 +2,15 @@ import UIKit
 import Alamofire
 
 class Api {
-    class var url:String {
-        return "http://api.gamepicker.co.kr/"
-    }
+    static let url: String = "http://api.gamepicker.co.kr/"
+    
+    static var authorization: [String: String] = [
+        "authorization": "w6mgLXNHbPgewJtRESxh",
+        "x-access-token": UserDefaults.standard.string(forKey: data.user.token) ?? ""
+    ]
 }
 
-class Connectivity {
+final class Connectivity {
     class var isConnectedToInternet: Bool {
         return NetworkReachabilityManager()!.isReachable
     }
@@ -17,20 +20,23 @@ extension UIViewController {
     var tutorialSB: UIStoryboard {
         return UIStoryboard(name: "Tutorial", bundle: Bundle.main)
     }
+    
     func instanceTutorialVC(name: String) -> UIViewController? {
         return self.tutorialSB.instantiateViewController(withIdentifier: name)
     }
+    
     var MainSB: UIStoryboard {
         return UIStoryboard(name: "Main", bundle: Bundle.main)
     }
+    
     func instanceMainVC(name: String) -> UIViewController? {
         return self.MainSB.instantiateViewController(withIdentifier: name)
     }
     
-    func showalert(message : String, can : Int) {
+    // 커스텀 클래스로 이사갈 예정
+    func showalert(message: String, can: Int) {
         let alert = UIAlertController(title: "알림", message: message, preferredStyle: .alert)
-        let ok = UIAlertAction(title: "확인", style: .default) {
-            (result: UIAlertAction) -> Void in
+        let ok = UIAlertAction(title: "확인", style: .default) { UIAlertAction in
             self.navigationController?.popViewController(animated: true)
         }
         let cancel = UIAlertAction(title: "확인", style: .cancel)
@@ -78,18 +84,22 @@ extension UIViewController {
         self.navigationItem.setRightBarButtonItems([search_item, message_item, alarm_item], animated: false)
         self.navigationItem.setLeftBarButtonItems([logo_item, title_item], animated: false)
     }
+    
     // 로고 터치
     @objc func navi_logo() {
         print("logo")
     }
+    
     // 알람 터치
     @objc func navi_alarm() {
         print("alarm")
     }
+    
     // 메세지 터치
     @objc func navi_message() {
         print("message")
     }
+    
     @objc func navi_search() {
         let vc = self.instanceMainVC(name: "search")
         self.navigationController?.pushViewController(vc!, animated: true)
@@ -101,12 +111,13 @@ extension UIViewController {
         tap.cancelsTouchesInView = false
         view.addGestureRecognizer(tap)
     }
+    
     @objc func dismissKeyboard() {
         view.endEditing(true)
     }
 }
 
-extension UIViewController: UITextFieldDelegate {
+extension UIViewController {
     func addToolBar(textField: UITextField, title: String) {
         let toolbar = UIToolbar()
         toolbar.barStyle = UIBarStyle.default
@@ -114,10 +125,9 @@ extension UIViewController: UITextFieldDelegate {
         toolbar.barTintColor = UIColor(red:0.91, green:0.08, blue:0.41, alpha:1.0)
         toolbar.isTranslucent = false
         toolbar.sizeToFit()
-        
         let done = UIBarButtonItem(title: title, style: .plain, target: self, action: #selector(barPressed))
         UIBarButtonItem.appearance().setTitleTextAttributes(
-            [NSAttributedString.Key.font : UIFont.boldSystemFont(ofSize: 18)], for: .normal)
+            [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 18)], for: .normal)
         done.width = UIScreen.main.bounds.width
         toolbar.setItems([done], animated: false)
         toolbar.isUserInteractionEnabled = true
@@ -126,6 +136,19 @@ extension UIViewController: UITextFieldDelegate {
     
     @objc func barPressed(){
         print("bar pressed")
+    }
+}
+
+
+extension UIImage {
+    func resizeImage(size: CGSize) -> UIImage {
+        let originalSize = self.size
+        let ratio: CGFloat = {
+            return originalSize.width > originalSize.height ? 1 / (size.width / originalSize.width) :
+                1 / (size.height / originalSize.height)
+        }()
+        
+        return UIImage(cgImage: self.cgImage!, scale: self.scale * ratio, orientation: self.imageOrientation)
     }
 }
 
@@ -141,18 +164,42 @@ extension UIView {
         self.layer.add(shakeGroup, forKey: "shakeIt")
     }
     
-    // OUTPUT 1
-    func dropShadow(scale: Bool = true) {
-        layer.masksToBounds = false
-        layer.shadowColor = UIColor.black.cgColor
-        layer.shadowOpacity = 0.5
-        layer.shadowOffset = CGSize(width: -1, height: 1)
-        layer.shadowRadius = 2
-        
-        layer.shadowPath = UIBezierPath(rect: bounds).cgPath
-        layer.shouldRasterize = true
-        layer.rasterizationScale = scale ? UIScreen.main.scale : 1
+    func pushTransition(direction: CATransitionSubtype) {
+        let animation:CATransition = CATransition()
+        animation.timingFunction = CAMediaTimingFunction(name:
+            CAMediaTimingFunctionName.easeInEaseOut)
+        animation.type = CATransitionType.push
+        animation.subtype = direction
+        animation.duration = 0.5
+        layer.add(animation, forKey: CATransitionType.push.rawValue)
     }
+
+    
+}
+
+extension UIScrollView {
+    
+    var isAtTop: Bool {
+        return contentOffset.y <= verticalOffsetForTop
+    }
+    
+    var isAtBottom: Bool {
+        return contentOffset.y >= verticalOffsetForBottom
+    }
+    
+    var verticalOffsetForTop: CGFloat {
+        let topInset = contentInset.top
+        return -topInset
+    }
+    
+    var verticalOffsetForBottom: CGFloat {
+        let scrollViewHeight = bounds.height
+        let scrollContentSizeHeight = contentSize.height
+        let bottomInset = contentInset.bottom
+        let scrollViewBottomOffset = scrollContentSizeHeight + bottomInset - scrollViewHeight
+        return scrollViewBottomOffset
+    }
+    
 }
 
 extension Date {
@@ -189,7 +236,7 @@ extension Date {
             return "\(weeksFromNow)주 전"
         }
         if daysFromNow    > 0 {
-            return daysFromNow == 1 ? "어제" : "\(daysFromNow)일 전"
+            return daysFromNow == 1 ? "어제": "\(daysFromNow)일 전"
         }
         if hoursFromNow   > 0 {
             return "\(hoursFromNow)시간 전"
@@ -197,28 +244,50 @@ extension Date {
         if minutesFromNow > 0 {
             return "\(minutesFromNow)분 전"
         }
-        if secondsFromNow > 0 {
-            return secondsFromNow < 15 ? "방금전": "\(secondsFromNow)초 전"
+        if secondsFromNow >= 0 {
+            return secondsFromNow < 10 ? "방금전": "\(secondsFromNow)초 전"
         }
+
         return ""
     }
 }
 
+final class IntrinsicTableView: UITableView {
+    
+    override var contentSize:CGSize {
+        didSet {
+            self.invalidateIntrinsicContentSize()
+        }
+    }
+    
+    
+    override var intrinsicContentSize: CGSize {
+        self.layoutIfNeeded()
+        return CGSize(width: UIView.noIntrinsicMetric, height: contentSize.height)
+    }
+    
+}
+
 // userdefault 데이터
 struct data {
-    static let isLogin = "isLogin" // 로그인 했는지 판단 (자동로그인)
-    static let isFirst = "isFirst"    // 어플 첫 실행인지 판단
+    static let isTutorial = "ISTUTORIAL"
+    static let isLogin = "ISLOGIN"
+    static let isPush = "ISFRISTLOGIN"
     
     struct user {
-        static let id = "id"
-        static let token = "token"
+        static let id = "ID"
+        static let token = "TOKEN"
         
-        static let name = "name"
-        static let email = "email"
-        static let birthday = "birthday"
-        static let introduce = "introduce"
-        static let gender = "gender"
-        static let points = "points"
-        static let profile = "profile"
+        // 로그인 하면서 얻는 정보
+        static let email = "EMAIL"
+        static let password = "PASSWORD"
+        
+        // get me 에서 얻음
+        static let name = "NAME"
+        static let birthday = "BIRTHDAY"
+        static let introduce = "INTRODUCE"
+        static let gender = "GENDER"
+        static let points = "POINTS"
+        static let profile = "PROFILE"
     }
 }

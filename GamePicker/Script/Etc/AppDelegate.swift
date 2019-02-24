@@ -4,12 +4,11 @@ import UserNotifications
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate {
+    
     var window: UIWindow?
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        
         FirebaseApp.configure()
-        
         if #available(iOS 10.0, *) {
             // For iOS 10 display notification (sent via APNS)
             UNUserNotificationCenter.current().delegate = self
@@ -26,6 +25,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         
         application.registerForRemoteNotifications()
         
+        
         let pageControl = UIPageControl.appearance()
         pageControl.pageIndicatorTintColor = UIColor.lightGray
         pageControl.currentPageIndicatorTintColor = UIColor.white
@@ -34,19 +34,25 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     }
     
     func applicationWillResignActive(_ application: UIApplication) {
+        
     }
     
     func applicationDidEnterBackground(_ application: UIApplication) {
+    
     }
     
     func applicationWillEnterForeground(_ application: UIApplication) {
+        
     }
     
     func applicationDidBecomeActive(_ application: UIApplication) {
+        
     }
     
     func applicationWillTerminate(_ application: UIApplication) {
+        
     }
+    
     
 }
 

@@ -68,12 +68,12 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="x6M-bm-ILh">
-                                <rect key="frame" x="179" y="849" width="56" height="30"/>
+                                <rect key="frame" x="15" y="832" width="384" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="Xui-QQ-cxF"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="16"/>
-                                <state key="normal" title="시작하기">
+                                <state key="normal" title="로그인">
                                     <color key="titleColor" red="0.99999600649999998" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
                                 <connections>
@@ -83,8 +83,10 @@
                         </subviews>
                         <color key="backgroundColor" red="0.26051741839999998" green="0.2605243921" blue="0.260520637" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstAttribute="bottom" secondItem="x6M-bm-ILh" secondAttribute="bottom" constant="17" id="6IY-p8-gIf"/>
+                            <constraint firstItem="oag-aw-kts" firstAttribute="trailing" secondItem="x6M-bm-ILh" secondAttribute="trailing" constant="15" id="5Ef-V0-G4O"/>
+                            <constraint firstAttribute="bottomMargin" secondItem="x6M-bm-ILh" secondAttribute="bottom" id="cdN-6J-Tuv"/>
                             <constraint firstItem="x6M-bm-ILh" firstAttribute="centerX" secondItem="zd2-zI-bD3" secondAttribute="centerX" id="h51-qa-4gW"/>
+                            <constraint firstItem="x6M-bm-ILh" firstAttribute="leading" secondItem="oag-aw-kts" secondAttribute="leading" constant="15" id="wxO-zU-KPA"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="oag-aw-kts"/>
                     </view>

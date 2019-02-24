@@ -52,7 +52,7 @@
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oL9-aR-c8V">
                             <rect key="frame" x="105" y="45" width="90" height="90"/>
                             <subviews>
-                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_logout.png" translatesAutoresizingMaskIntoConstraints="NO" id="5uc-Py-f7R">
+                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_logout" translatesAutoresizingMaskIntoConstraints="NO" id="5uc-Py-f7R">
                                     <rect key="frame" x="26" y="26" width="38" height="38"/>
                                 </imageView>
                             </subviews>
@@ -122,6 +122,6 @@
         </view>
     </objects>
     <resources>
-        <image name="ic_logout.png" width="60" height="60"/>
+        <image name="ic_logout" width="30" height="30"/>
     </resources>
 </document>

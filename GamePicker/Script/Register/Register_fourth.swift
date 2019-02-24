@@ -11,12 +11,13 @@ class Register_fourth: UIViewController {
     
     @IBOutlet var name_under: UIView!
     
-    var mail : String = ""
-    var password : String = ""
-    var birth : String = ""
-    var gender : String = ""
+    var mail: String = ""
+    var password: String = ""
+    var birth: String = ""
+    var gender: String = ""
     
-    var isSucces:Bool = false
+    var isSucces: Bool = false
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,17 +29,18 @@ class Register_fourth: UIViewController {
         complete(self)
     }
     
+    
     @IBAction func cancel(_ sender: Any) {
         let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         let cancel = UIAlertAction(title: "계속", style: .cancel)
-        let ok = UIAlertAction(title: "이름입력 취소", style: .default) {
-            (result:UIAlertAction) -> Void in
+        let ok = UIAlertAction(title: "이름입력 취소", style: .default) { UIAlertAction in
             self.navigationController?.popViewController(animated: true)
         }
-        let ok2 = UIAlertAction(title: "회원가입 취소", style: .destructive) {
-            (result:UIAlertAction) -> Void in
+        
+        let ok2 = UIAlertAction(title: "회원가입 취소", style: .destructive) { UIAlertAction in
             self.presentingViewController?.dismiss(animated: true)
         }
+        
         alert.addAction(cancel)
         alert.addAction(ok)
         alert.addAction(ok2)
@@ -49,20 +51,21 @@ class Register_fourth: UIViewController {
         if name_field.text!.isEmpty {
             warn_text.isHidden = false
             warn_stack.isHidden = false
-            warn_text.text = "어떤 글자라도 입력하세요."
+            warn_text.text = "필수입력 항목입니다."
             return
         } else if name_field.text!.count > 10 {
             warn_text.isHidden = false
             warn_stack.isHidden = false
             warn_text.text = "10자 이내로 설정하세요."
             return
-        } else if name_field.text!.count < 2 {
+        } else if name_field.text!.count < 3 {
             warn_text.isHidden = false
             warn_stack.isHidden = false
-            warn_text.text = "더 긴 이름을 입력하세요."
+            warn_text.text = "3자 이상의 이름을 입력하세요."
             return
         }
-        get_name_isOverlap() { result in
+        
+        get_name_isOverlap { result in
             if result {
                 // 이름 중복 체크
                 self.warn_text.isHidden = false
@@ -74,60 +77,6 @@ class Register_fourth: UIViewController {
         }
     }
     
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        textField.resignFirstResponder()
-        return true
-    }
-    
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        guard let text = textField.text else { return true }
-        let newLength = text.count + string.count - range.length
-        if newLength == 0 {
-            complete.backgroundColor = UIColor(red:0.87, green:0.87, blue:0.87, alpha:1.0)
-            complete.isEnabled = false
-        } else {
-            complete.backgroundColor = UIColor(red:0.91, green:0.08, blue:0.41, alpha:1.0)
-            complete.isEnabled = true
-        }
-        return newLength <= 11
-    }
-    
-    func textFieldDidEndEditing(_ textField: UITextField) {
-        name_under.backgroundColor = UIColor(red:0.87, green:0.87, blue:0.87, alpha:1.0)
-        if name_field!.text == "\u{C190} \u{D76C} \u{C5F0}" {
-            textField.text?.append("\u{1F496}")
-        }
-    }
-    
-    func textFieldDidBeginEditing(_ textField: UITextField) {
-        name_under.backgroundColor = UIColor(red:0.91, green:0.08, blue:0.41, alpha:1.0)
-    }
-    
-    func post_register() {
-        let parameters: [String: Any] = [
-            "email" : mail,
-            "name" : name_field.text ?? "",
-            "password" : password,
-            "birthday" : birth,
-            "gender" : gender
-        ]
-        
-        Alamofire.request(Api.url + "auth/register", method: .post, parameters: parameters).responseJSON { (response) in
-            if response.result.isSuccess {
-                let json = JSON(response.result.value!)
-                if response.response?.statusCode == 200 {
-                    self.isSucces = true
-                    self.complete_register()
-                } else if response.response?.statusCode ?? 0 < 500 {
-                    self.showalert(message: json["message"].stringValue, can: 1)
-                } else {
-                    self.showalert(message: "서버 오류", can: 1)
-                }
-            } else {
-                self.showalert(message: "서버 응답 오류", can: 0)
-            }
-        }
-    }
     
     func complete_register() {
         let alert = UIAlertController(title: nil, message: "회원가입 완료", preferredStyle: .alert)
@@ -144,21 +93,45 @@ class Register_fourth: UIViewController {
         return
     }
     
-    override func viewDidDisappear(_ animated: Bool) {
-        if isSucces {
-            //Logout().direct_login()
+    
+    /* request functions */
+    func post_register() {
+        let parameters: [String: Any] = [
+            "email": mail,
+            "name": name_field.text ?? "",
+            "password": password,
+            "birthday": birth,
+            "gender": gender
+        ]
+        
+        Alamofire.request(Api.url + "auth/register", method: .post, parameters: parameters, headers: Api.authorization).responseJSON { (response) in
+            if response.result.isSuccess {
+                let json = JSON(response.result.value!)
+                if response.response?.statusCode == 200 {
+                    self.isSucces = true
+                    self.complete_register()
+                    
+                } else if response.response?.statusCode ?? 0 < 500 {
+                    self.showalert(message: json["message"].stringValue, can: 1)
+                } else {
+                    self.showalert(message: "서버 오류", can: 1)
+                }
+            } else {
+                self.showalert(message: "네트워크 연결 실패", can: 0)
+            }
         }
     }
     
-    func get_name_isOverlap(completionHandler : @escaping (Bool) -> Void ) {
+    func get_name_isOverlap(completionHandler: @escaping (Bool) -> Void ) {
         let urlstr = Api.url + "users?name=" + name_field.text!
         let encoded = urlstr.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
         
-        Alamofire.request(URL(string: encoded)!).responseJSON { (response) in
+        Alamofire.request(URL(string: encoded)!, headers: Api.authorization).responseJSON { (response) in
             if response.result.isSuccess {
                 let json = JSON(response.result.value ?? "")
                 if response.response?.statusCode == 200 {
                     let arr = json["users"].arrayValue
+                    
                     if arr.count == 1 {
                         completionHandler(true)
                     }
@@ -166,9 +139,31 @@ class Register_fourth: UIViewController {
                     self.showalert(message: "서버 오류", can: 0)
                 }
             } else {
-                self.showalert(message: "서버 응답 오류", can: 0)
+                self.showalert(message: "네트워크 연결 실패", can: 0)
             }
         }
         completionHandler(false)
     }
 }
+
+
+
+extension Register_fourth: UITextFieldDelegate {
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        name_under.backgroundColor = UIColor(red:0.87, green:0.87, blue:0.87, alpha:1.0)
+        if name_field!.text == "\u{C190} \u{D76C} \u{C5F0}" {
+            textField.text?.append("\u{1F496}")
+        }
+        
+        if !(textField.text?.isEmpty)! {
+            complete.backgroundColor = UIColor(red:0.87, green:0.87, blue:0.87, alpha:1.0)
+        } else {
+            complete.backgroundColor = UIColor(red:0.91, green:0.08, blue:0.41, alpha:1.0)
+        }
+    }
+    
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        name_under.backgroundColor = UIColor(red:0.91, green:0.08, blue:0.41, alpha:1.0)
+    }
+}
+
