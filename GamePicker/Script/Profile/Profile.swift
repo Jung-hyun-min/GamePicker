@@ -202,7 +202,7 @@ class Profile: UIViewController {
                 let json = JSON(response.result.value!)
                 
                 switch response.response?.statusCode ?? 0 {
-                case 200: print(json)
+                case 200:
                 
                     let posts = json["posts"].arrayValue
                     let user_id = UserDefaults.standard.integer(forKey: data.user.id)

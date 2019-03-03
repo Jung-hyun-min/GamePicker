@@ -1236,7 +1236,7 @@
                                 </constraints>
                                 <color key="textColor" red="0.13333333333333333" green="0.13333333333333333" blue="0.13333333333333333" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                <textInputTraits key="textInputTraits"/>
+                                <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" smartDashesType="no" smartInsertDeleteType="no" smartQuotesType="no"/>
                                 <connections>
                                     <outlet property="delegate" destination="2Vo-Ol-V1I" id="URT-EF-nj6"/>
                                 </connections>
@@ -3745,7 +3745,7 @@
                                 </constraints>
                                 <nil key="textColor"/>
                                 <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
-                                <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" returnKeyType="continue" secureTextEntry="YES" smartDashesType="no" smartInsertDeleteType="no" smartQuotesType="no" textContentType="password"/>
+                                <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" returnKeyType="done" secureTextEntry="YES" smartDashesType="no" smartInsertDeleteType="no" smartQuotesType="no" textContentType="password"/>
                                 <connections>
                                     <outlet property="delegate" destination="gwU-bB-d4O" id="AKM-PF-03H"/>
                                 </connections>
@@ -4539,7 +4539,7 @@
     <inferredMetricsTieBreakers>
         <segue reference="axg-Ld-DcU"/>
         <segue reference="MRn-IB-zxC"/>
-        <segue reference="OoX-HB-38o"/>
+        <segue reference="b5M-XC-h78"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" red="0.99999600649999998" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
 </document>

@@ -16,8 +16,6 @@ class Register_fourth: UIViewController {
     var birth: String = ""
     var gender: String = ""
     
-    var isSucces: Bool = false
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -53,10 +51,10 @@ class Register_fourth: UIViewController {
             warn_stack.isHidden = false
             warn_text.text = "필수입력 항목입니다."
             return
-        } else if name_field.text!.count > 10 {
+        } else if name_field.text!.count > 15 {
             warn_text.isHidden = false
             warn_stack.isHidden = false
-            warn_text.text = "10자 이내로 설정하세요."
+            warn_text.text = "15자 이내로 설정하세요."
             return
         } else if name_field.text!.count < 3 {
             warn_text.isHidden = false
@@ -72,7 +70,7 @@ class Register_fourth: UIViewController {
                 self.warn_stack.isHidden = false
                 self.warn_text.text = "이미 존재하는 닉네임 입니다."
             } else {
-                //self.post_register()
+                self.post_register()
             }
         }
     }
@@ -87,6 +85,7 @@ class Register_fourth: UIViewController {
                 pvc?.performSegue(withIdentifier: "login", sender: self)
             }
         }
+        
         alert.addAction(ok)
         
         self.present(alert,animated: true)
@@ -94,11 +93,10 @@ class Register_fourth: UIViewController {
     }
     
     
-    /* request functions */
     func post_register() {
         let parameters: [String: Any] = [
             "email": mail,
-            "name": name_field.text ?? "",
+            "name": name_field.text!,
             "password": password,
             "birthday": birth,
             "gender": gender
@@ -107,8 +105,7 @@ class Register_fourth: UIViewController {
         Alamofire.request(Api.url + "auth/register", method: .post, parameters: parameters, headers: Api.authorization).responseJSON { (response) in
             if response.result.isSuccess {
                 let json = JSON(response.result.value!)
-                if response.response?.statusCode == 200 {
-                    self.isSucces = true
+                if response.response?.statusCode == 204 {
                     self.complete_register()
                     
                 } else if response.response?.statusCode ?? 0 < 500 {
@@ -132,9 +129,9 @@ class Register_fourth: UIViewController {
                 if response.response?.statusCode == 200 {
                     let arr = json["users"].arrayValue
                     
-                    if arr.count == 1 {
-                        completionHandler(true)
-                    }
+                    if arr.count == 1 { completionHandler(true) }
+                    else { completionHandler(false) }
+                    
                 } else {
                     self.showalert(message: "서버 오류", can: 0)
                 }
@@ -142,7 +139,6 @@ class Register_fourth: UIViewController {
                 self.showalert(message: "네트워크 연결 실패", can: 0)
             }
         }
-        completionHandler(false)
     }
 }
 
@@ -155,7 +151,7 @@ extension Register_fourth: UITextFieldDelegate {
             textField.text?.append("\u{1F496}")
         }
         
-        if !(textField.text?.isEmpty)! {
+        if (textField.text?.isEmpty)! {
             complete.backgroundColor = UIColor(red:0.87, green:0.87, blue:0.87, alpha:1.0)
         } else {
             complete.backgroundColor = UIColor(red:0.91, green:0.08, blue:0.41, alpha:1.0)

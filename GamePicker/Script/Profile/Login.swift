@@ -64,7 +64,6 @@ class Login: UIViewController {
     }
 
     
-    /* util functions */
     func mail_chk() -> Bool {
         if mail.text!.isEmpty {
             // mail textfield 비었으면
@@ -96,7 +95,6 @@ class Login: UIViewController {
     }
     
 
-    /* request functions */
     func post_login() {
         // 로그인 데이터
         let parameters: [String: Any] = [
